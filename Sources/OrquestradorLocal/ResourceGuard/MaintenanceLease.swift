@@ -1,5 +1,13 @@
 import Foundation
 
+/// Estado de Saúde do Armazenamento de Leases de Manutenção
+public enum LeaseStoreHealth: String, Codable, Sendable {
+    case healthy     // Arquivo existe e decodificou perfeitamente
+    case missing     // Arquivo ainda não existe (estado normal inicial)
+    case corrupted   // Arquivo existe mas contém JSON inválido/corrompido
+    case unavailable // Falha de I/O ou sem permissão de acesso ao diretório
+}
+
 /// Estrutura de um Lease (Bloqueio) de Manutenção
 public struct MaintenanceLeaseRecord: Identifiable, Sendable, Codable, Equatable {
     public let id: UUID
@@ -41,10 +49,11 @@ public struct MaintenanceLeaseRecord: Identifiable, Sendable, Codable, Equatable
     }
 }
 
-/// Gerenciador de Leases de Manutenção com Persistência Atômica em Disco
+/// Gerenciador de Leases de Manutenção com Persistência Atômica em Disco e Monitor de Saúde
 public actor MaintenanceLeaseManager {
     private var activeLeases: [UUID: MaintenanceLeaseRecord] = [:]
     private let storageURL: URL?
+    public private(set) var storeHealth: LeaseStoreHealth
     
     public init(storageURL: URL? = nil) {
         let resolvedURL: URL?
@@ -61,7 +70,9 @@ public actor MaintenanceLeaseManager {
             }
         }
         self.storageURL = resolvedURL
-        self.activeLeases = Self.loadLeases(from: resolvedURL)
+        let (leases, health) = Self.loadLeases(from: resolvedURL)
+        self.activeLeases = leases
+        self.storeHealth = health
     }
     
     public func acquireLease(owner: String, reason: String, durationSeconds: TimeInterval = 300) -> MaintenanceLeaseRecord {
@@ -98,6 +109,9 @@ public actor MaintenanceLeaseManager {
     
     public func isMaintenanceBlocked() -> (blocked: Bool, activeReasons: [String]) {
         cleanExpired()
+        if storeHealth == .corrupted || storeHealth == .unavailable {
+            return (true, ["Armazenamento de Leases corrompido/indisponível (bloqueio conservador de segurança)"])
+        }
         if activeLeases.isEmpty {
             return (false, [])
         }
@@ -119,9 +133,12 @@ public actor MaintenanceLeaseManager {
         }
     }
     
-    private static func loadLeases(from url: URL?) -> [UUID: MaintenanceLeaseRecord] {
-        guard let url, FileManager.default.fileExists(atPath: url.path) else {
-            return [:]
+    private static func loadLeases(from url: URL?) -> ([UUID: MaintenanceLeaseRecord], LeaseStoreHealth) {
+        guard let url else {
+            return ([:], .unavailable)
+        }
+        guard FileManager.default.fileExists(atPath: url.path) else {
+            return ([:], .missing)
         }
         
         do {
@@ -136,15 +153,18 @@ public actor MaintenanceLeaseManager {
                     loaded[lease.id] = lease
                 }
             }
-            return loaded
+            return (loaded, .healthy)
         } catch {
-            // Em caso de corrupção ou erro de decoding, adota estado seguro vazio sem crash
-            return [:]
+            // Em caso de corrupção ou erro de decoding, adota estado seguro sem crash e reporta .corrupted
+            return ([:], .corrupted)
         }
     }
     
     private func saveToDisk() {
-        guard let storageURL else { return }
+        guard let storageURL else {
+            storeHealth = .unavailable
+            return
+        }
         
         do {
             let encoder = JSONEncoder()
@@ -153,8 +173,9 @@ public actor MaintenanceLeaseManager {
             let list = Array(activeLeases.values)
             let data = try encoder.encode(list)
             try data.write(to: storageURL, options: .atomic)
+            storeHealth = .healthy
         } catch {
-            // Falha na persistência tratada silenciosamente sem travar a execução em memória
+            storeHealth = .unavailable
         }
     }
 }

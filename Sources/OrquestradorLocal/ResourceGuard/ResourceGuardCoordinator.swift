@@ -14,6 +14,7 @@ public final class ResourceGuardCoordinator: ObservableObject {
     @Published public private(set) var mode: ResourceGuardMode = .observing
     @Published public private(set) var activeJobs: [ActiveJob] = []
     @Published public private(set) var activeLeases: [MaintenanceLeaseRecord] = []
+    @Published public private(set) var leaseStoreHealth: LeaseStoreHealth = .missing
     @Published public private(set) var lastDecision: String = "Monitoramento ativo"
     
     public let monitor: ResourceMonitor
@@ -51,10 +52,12 @@ public final class ResourceGuardCoordinator: ObservableObject {
                 let snap = await self.monitor.sample()
                 let jobs = await self.jobRegistry.listActiveJobs()
                 let leases = await self.leaseManager.listActiveLeases()
+                let health = await self.leaseManager.storeHealth
                 
                 self.currentSnapshot = snap
                 self.activeJobs = jobs
                 self.activeLeases = leases
+                self.leaseStoreHealth = health
                 
                 try? await Task.sleep(nanoseconds: intervalSeconds * 1_000_000_000)
             }

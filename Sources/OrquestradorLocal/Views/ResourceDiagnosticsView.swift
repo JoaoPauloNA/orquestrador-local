@@ -116,8 +116,14 @@ public struct ResourceDiagnosticsView: View {
                 
                 // Seção de Leases de Manutenção
                 VStack(alignment: .leading, spacing: 8) {
-                    Text("Leases de Manutenção Ativas (\(resourceGuard.activeLeases.count))")
-                        .font(.headline)
+                    HStack {
+                        Text("Leases de Manutenção Ativas (\(resourceGuard.activeLeases.count))")
+                            .font(.headline)
+                        Spacer()
+                        Text("Saúde: \(formatStoreHealth(resourceGuard.leaseStoreHealth))")
+                            .font(.caption)
+                            .foregroundColor(colorForStoreHealth(resourceGuard.leaseStoreHealth))
+                    }
                     
                     if resourceGuard.activeLeases.isEmpty {
                         Text("Nenhuma restrição de manutenção ativa no momento.")
@@ -210,5 +216,22 @@ public struct ResourceDiagnosticsView: View {
     private func formatThrottling(_ throttled: Bool?) -> String {
         guard let throttled else { return "Throttling: N/D" }
         return throttled ? "Throttling Ativo" : "Nominal"
+    }
+
+    private func formatStoreHealth(_ h: LeaseStoreHealth) -> String {
+        switch h {
+        case .healthy: return "Íntegro (OK)"
+        case .missing: return "Não criado (Padrão)"
+        case .corrupted: return "Corrompido (Alerta)"
+        case .unavailable: return "Indisponível"
+        }
+    }
+
+    private func colorForStoreHealth(_ h: LeaseStoreHealth) -> Color {
+        switch h {
+        case .healthy, .missing: return .green
+        case .corrupted: return .red
+        case .unavailable: return .orange
+        }
     }
 }

@@ -179,15 +179,11 @@ final class ResourceGuardLifecycleIntegrationTests: XCTestCase {
         let id = try XCTUnwrap(coordinator.services.first?.id)
         
         ownsPossibleJob = true
-        // Solicita início
         await coordinator.startService(id)
         
         let runtime = try XCTUnwrap(coordinator.services.first)
+        XCTAssertEqual(runtime.lifecycleState, ServiceLifecycleState.ready)
         
-        // Em modo observador, o serviço DEVE ter iniciado e alcançado .ready
-        XCTAssertEqual(runtime.lifecycleState, .ready)
-        
-        // Finaliza graciosamente para limpeza
         await coordinator.stopService(id, userConfirmedIdle: true)
         ownsPossibleJob = false
     }
@@ -224,13 +220,10 @@ final class ResourceGuardLifecycleIntegrationTests: XCTestCase {
         try await coordinator.register(input: input)
         let id = try XCTUnwrap(coordinator.services.first?.id)
         
-        // Solicita início sob modo ativo e pressão crítica
         await coordinator.startService(id)
         
         let runtime = try XCTUnwrap(coordinator.services.first)
-        
-        // Em modo activeAdmission com pressão crítica, o serviço NÃO pode iniciar (permanece .stopped)
-        XCTAssertEqual(runtime.lifecycleState, .stopped)
+        XCTAssertEqual(runtime.lifecycleState, ServiceLifecycleState.stopped)
         XCTAssertTrue(runtime.lastError?.contains("Início adiado pelo Resource Guard") == true)
     }
     
@@ -274,8 +267,7 @@ final class ResourceGuardLifecycleIntegrationTests: XCTestCase {
         await coordinator.startService(id)
         
         let runtime = try XCTUnwrap(coordinator.services.first)
-        
-        XCTAssertEqual(runtime.lifecycleState, .stopped)
+        XCTAssertEqual(runtime.lifecycleState, ServiceLifecycleState.stopped)
         XCTAssertTrue(runtime.lastError?.contains("Início prevenido pelo Resource Guard") == true)
     }
     
@@ -312,20 +304,69 @@ final class ResourceGuardLifecycleIntegrationTests: XCTestCase {
         let id = try XCTUnwrap(coordinator.services.first?.id)
         
         ownsPossibleJob = true
-        // 1. Inicia sob condições normais -> .ready
         await coordinator.startService(id)
         let runtime = try XCTUnwrap(coordinator.services.first)
-        XCTAssertEqual(runtime.lifecycleState, .ready)
+        XCTAssertEqual(runtime.lifecycleState, ServiceLifecycleState.ready)
         
-        // 2. Agora registramos 2 jobs pesados para estourar o limite de admissão
         _ = await rg.registerHeavyJob(serviceLabel: "other1", kind: .diffusionGeneration, description: "Heavy 1")
         _ = await rg.registerHeavyJob(serviceLabel: "other2", kind: .benchmarkRun, description: "Heavy 2")
         
-        // 3. Executa restart: deve parar o serviço e, ao tentar re-iniciar, ser bloqueado pelo limite de admissão
         await coordinator.restartService(id, userConfirmedIdle: true)
         
-        XCTAssertEqual(runtime.lifecycleState, .stopped)
+        XCTAssertEqual(runtime.lifecycleState, ServiceLifecycleState.stopped)
         XCTAssertTrue(runtime.lastError?.contains("Início adiado pelo Resource Guard") == true)
+        ownsPossibleJob = false
+    }
+
+    // 05. Maintenance Lease Prevents Stop Before Restart (Início da Parada Bloqueado)
+    func testMaintenanceLeasePreventsStopBeforeRestart() async throws {
+        let metrics = ConfigurableMetricsProvider(pressure: .normal)
+        let rg = ResourceGuardCoordinator(
+            monitor: ResourceMonitor(provider: metrics),
+            initialMode: .activeAdmission
+        )
+        
+        let adapter = LaunchAgentAdapter()
+        let coordinator = OrchestrationCoordinator(
+            catalog: try CatalogStore(fileURL: catalogURL),
+            launchAgent: adapter,
+            resourceGuard: rg
+        )
+        
+        let input = ProfileValidator.RawInput(
+            name: "Fixture",
+            label: label,
+            plistPath: plistURL.path,
+            executablePath: "/usr/bin/python3",
+            workingDirectory: workURL.path,
+            readinessURLString: "http://127.0.0.1:\(port)/health",
+            readinessIdentityKind: .bodyContains,
+            readinessIdentityValue: "orquestrador-fixture",
+            activityURLString: "http://127.0.0.1:\(port)/queue",
+            openURLString: "http://127.0.0.1:\(port)/",
+            readinessTimeoutSeconds: 5,
+            stopTimeoutSeconds: 5
+        )
+        try await coordinator.register(input: input)
+        let id = try XCTUnwrap(coordinator.services.first?.id)
+        
+        ownsPossibleJob = true
+        await coordinator.startService(id)
+        let runtime = try XCTUnwrap(coordinator.services.first)
+        XCTAssertEqual(runtime.lifecycleState, ServiceLifecycleState.ready)
+        
+        // Adquire Lease de Manutenção
+        let lease = await rg.acquireMaintenanceLease(owner: "BatchWorker", reason: "Transcrição Longa em Andamento", duration: 600)
+        
+        // Tenta restart: DEVE ser bloqueado e o serviço DEVE permanecer .ready (não pode ser parado!)
+        await coordinator.restartService(id, userConfirmedIdle: true)
+        
+        XCTAssertEqual(runtime.lifecycleState, ServiceLifecycleState.ready, "Serviço NÃO deve ter sido parado sob Lease de Manutenção ativa")
+        XCTAssertTrue(runtime.lastError?.contains("Reinício adiado por Lease de Manutenção ativa") == true)
+        
+        // Libera lease e executa stop normal para limpeza
+        await rg.releaseMaintenanceLease(id: lease.id)
+        await coordinator.stopService(id, userConfirmedIdle: true)
         ownsPossibleJob = false
     }
 }

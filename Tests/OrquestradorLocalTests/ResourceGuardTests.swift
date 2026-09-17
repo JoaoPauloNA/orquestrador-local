@@ -36,13 +36,12 @@ final class ResourceGuardTests: XCTestCase {
     // MARK: - 01. Observer Does Not Block
     func testObserverDoesNotBlock() async {
         let mock = MockMetricsProvider(pressure: .critical)
-        let coordinator = await ResourceGuardCoordinator(
+        let coordinator = ResourceGuardCoordinator(
             monitor: ResourceMonitor(provider: mock),
             initialMode: .observing
         )
         
         let decision = await coordinator.evaluateAdmission(for: "com.joaopaulo.secondmind")
-        // No modo observador, a policy retorna a decisão técnica, mas o OrchestrationCoordinator não barra o start
         if case .queue = decision {
             XCTAssertTrue(true)
         } else {
@@ -54,7 +53,7 @@ final class ResourceGuardTests: XCTestCase {
     // MARK: - 02. Active Admission Blocks Critical Memory
     func testActiveAdmissionBlocksCriticalMemory() async {
         let mock = MockMetricsProvider(pressure: .critical)
-        let coordinator = await ResourceGuardCoordinator(
+        let coordinator = ResourceGuardCoordinator(
             monitor: ResourceMonitor(provider: mock),
             initialMode: .activeAdmission
         )
@@ -166,11 +165,15 @@ final class ResourceGuardTests: XCTestCase {
         
         let manager1 = MaintenanceLeaseManager(storageURL: storageURL)
         let lease = await manager1.acquireLease(owner: "ComfyUI", reason: "Batch Render", durationSeconds: 600)
+        let health1 = await manager1.storeHealth
+        XCTAssertEqual(health1, .healthy)
         
         // Recria manager apontando para o mesmo arquivo em disco
         let manager2 = MaintenanceLeaseManager(storageURL: storageURL)
         let leases = await manager2.listActiveLeases()
+        let health2 = await manager2.storeHealth
         
+        XCTAssertEqual(health2, .healthy)
         XCTAssertEqual(leases.count, 1)
         XCTAssertEqual(leases.first?.id, lease.id)
         XCTAssertEqual(leases.first?.owner, "ComfyUI")
@@ -194,8 +197,8 @@ final class ResourceGuardTests: XCTestCase {
         XCTAssertTrue(list.isEmpty)
     }
     
-    // MARK: - 09. Corrupt Lease Store Handled Safely
-    func testCorruptLeaseStoreHandledSafely() async throws {
+    // MARK: - 09. Corrupt Lease Store Handled Safely and Blocks Conservatively
+    func testCorruptLeaseStoreHandledSafelyAndBlocksConservatively() async throws {
         let tempDir = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
         try FileManager.default.createDirectory(at: tempDir, withIntermediateDirectories: true)
         defer { try? FileManager.default.removeItem(at: tempDir) }
@@ -204,16 +207,24 @@ final class ResourceGuardTests: XCTestCase {
         try "GARBAGE_JSON_DATA{{{".write(to: storageURL, atomically: true, encoding: .utf8)
         
         let manager = MaintenanceLeaseManager(storageURL: storageURL)
-        let (blocked, _) = await manager.isMaintenanceBlocked()
-        XCTAssertFalse(blocked)
+        let health = await manager.storeHealth
+        XCTAssertEqual(health, .corrupted)
+        
+        // Armazenamento corrompido deve bloquear conservadoramente para evitar parada de jobs não recuperados
+        let (blocked, reasons) = await manager.isMaintenanceBlocked()
+        XCTAssertTrue(blocked)
+        XCTAssertTrue(reasons.first?.contains("corrompido") == true)
+        
         let list = await manager.listActiveLeases()
         XCTAssertTrue(list.isEmpty)
     }
     
-    // MARK: - 10. Thermal Unknown Handled Correctly
-    func testThermalUnknownHandledCorrectly() {
+    // MARK: - 10. Thermal Mapping and Throttling
+    func testThermalStatesAndAdmission() {
         let policy = AdmissionPolicy()
-        let snap = SystemResourceSnapshot(
+        
+        // 10.1 Nominal & Fair -> ADMIT
+        let snapNominal = SystemResourceSnapshot(
             totalRAMBytes: 16 * 1024 * 1024 * 1024,
             freeRAMBytes: 8 * 1024 * 1024 * 1024,
             usedRAMBytes: 8 * 1024 * 1024 * 1024,
@@ -223,16 +234,67 @@ final class ResourceGuardTests: XCTestCase {
             freeSwapBytes: 6 * 1024 * 1024 * 1024,
             swapDeltaBytes: 0,
             cpuUsagePercent: nil,
-            thermalLevel: .unknown,
-            isThrottled: nil
+            thermalLevel: .nominal,
+            isThrottled: false
         )
+        XCTAssertEqual(policy.evaluate(snapshot: snapNominal, activeJobCount: 0), .admit(reason: "Recursos adequados para admissão da carga."))
         
-        let decision = policy.evaluate(snapshot: snap, activeJobCount: 0)
-        // Quando thermal é unknown mas RAM/Swap estão OK, admite normalmente sem bloquear falsamente
-        XCTAssertEqual(decision, .admit(reason: "Recursos adequados para admissão da carga."))
+        let snapFair = SystemResourceSnapshot(
+            totalRAMBytes: 16 * 1024 * 1024 * 1024,
+            freeRAMBytes: 8 * 1024 * 1024 * 1024,
+            usedRAMBytes: 8 * 1024 * 1024 * 1024,
+            memoryPressure: .normal,
+            totalSwapBytes: 8 * 1024 * 1024 * 1024,
+            usedSwapBytes: 2 * 1024 * 1024 * 1024,
+            freeSwapBytes: 6 * 1024 * 1024 * 1024,
+            swapDeltaBytes: 0,
+            cpuUsagePercent: nil,
+            thermalLevel: .fair,
+            isThrottled: false
+        )
+        XCTAssertEqual(policy.evaluate(snapshot: snapFair, activeJobCount: 0), .admit(reason: "Recursos adequados para admissão da carga."))
+        
+        // 10.2 Serious & Critical -> QUEUE
+        let snapSerious = SystemResourceSnapshot(
+            totalRAMBytes: 16 * 1024 * 1024 * 1024,
+            freeRAMBytes: 8 * 1024 * 1024 * 1024,
+            usedRAMBytes: 8 * 1024 * 1024 * 1024,
+            memoryPressure: .normal,
+            totalSwapBytes: 8 * 1024 * 1024 * 1024,
+            usedSwapBytes: 2 * 1024 * 1024 * 1024,
+            freeSwapBytes: 6 * 1024 * 1024 * 1024,
+            swapDeltaBytes: 0,
+            cpuUsagePercent: nil,
+            thermalLevel: .serious,
+            isThrottled: true
+        )
+        if case .queue(let reason) = policy.evaluate(snapshot: snapSerious, activeJobCount: 0) {
+            XCTAssertTrue(reason.contains("térmico do sistema elevado"))
+        } else {
+            XCTFail("Deveria ter bloqueado por nível térmico serious")
+        }
+        
+        let snapCritical = SystemResourceSnapshot(
+            totalRAMBytes: 16 * 1024 * 1024 * 1024,
+            freeRAMBytes: 8 * 1024 * 1024 * 1024,
+            usedRAMBytes: 8 * 1024 * 1024 * 1024,
+            memoryPressure: .normal,
+            totalSwapBytes: 8 * 1024 * 1024 * 1024,
+            usedSwapBytes: 2 * 1024 * 1024 * 1024,
+            freeSwapBytes: 6 * 1024 * 1024 * 1024,
+            swapDeltaBytes: 0,
+            cpuUsagePercent: nil,
+            thermalLevel: .critical,
+            isThrottled: true
+        )
+        if case .queue(let reason) = policy.evaluate(snapshot: snapCritical, activeJobCount: 0) {
+            XCTAssertTrue(reason.contains("térmico do sistema elevado"))
+        } else {
+            XCTFail("Deveria ter bloqueado por nível térmico critical")
+        }
     }
     
-    // MARK: - 11. Memory Metric Failure Returns N/D or Indisponível
+    // MARK: - 11. Memory Metric Failure Returns Indisponível
     func testMemoryMetricFailureFormatting() {
         let snap = SystemResourceSnapshot(
             totalRAMBytes: nil,
@@ -255,7 +317,7 @@ final class ResourceGuardTests: XCTestCase {
     
     // MARK: - 12. Non Interference Test
     func testNonInterferenceExternalProcess() async {
-        let coordinator = await ResourceGuardCoordinator(
+        let coordinator = ResourceGuardCoordinator(
             monitor: ResourceMonitor(provider: MockMetricsProvider()),
             jobRegistry: JobRegistry(),
             leaseManager: MaintenanceLeaseManager(),

@@ -556,6 +556,20 @@ public final class OrchestrationCoordinator: ObservableObject {
     /// profile must first complete the ordinary stop safety gates.
     public func restartService(_ id: UUID, userConfirmedIdle: Bool) async {
         guard let runtime = services.first(where: { $0.id == id }) else { return }
+
+        // Avaliação de Lease de Manutenção ANTES de iniciar a parada
+        let (maintenanceBlocked, reasons) = await resourceGuard.leaseManager.isMaintenanceBlocked()
+        if maintenanceBlocked {
+            let reasonText = reasons.joined(separator: "; ")
+            if resourceGuard.mode == .activeAdmission {
+                runtime.setError("Reinício adiado por Lease de Manutenção ativa: \(reasonText)")
+                runtime.addEvent(ServiceEvent(serviceId: id, kind: .stateReconciled, message: "Reinício adiado (DEFER): \(reasonText)"))
+                return
+            } else {
+                runtime.addEvent(ServiceEvent(serviceId: id, kind: .stateReconciled, message: "Resource Guard [Observador]: Reinício sob Lease ativa (\(reasonText))"))
+            }
+        }
+
         if runtime.lifecycleState == .ready {
             await stopService(id, userConfirmedIdle: userConfirmedIdle)
             guard runtime.lifecycleState == .stopped else { return }

@@ -104,9 +104,27 @@ public final class DarwinSystemMetricsProvider: SystemMetricsProvider, Sendable 
             freeSwap = UInt64(xsw.xsu_avail)
         }
         
-        // Estado Térmico: Sem API estável sem privilégios IOKit/root, reporta unknown/nil explicitamente
-        let thermal: ThermalLevel = .unknown
-        let throttled: Bool? = nil
+        // Estado Térmico Real via API oficial do macOS Foundation (ProcessInfo.processInfo.thermalState)
+        let thermalState = ProcessInfo.processInfo.thermalState
+        let thermal: ThermalLevel
+        let throttled: Bool?
+        switch thermalState {
+        case .nominal:
+            thermal = .nominal
+            throttled = false
+        case .fair:
+            thermal = .fair
+            throttled = false
+        case .serious:
+            thermal = .serious
+            throttled = true
+        case .critical:
+            thermal = .critical
+            throttled = true
+        @unknown default:
+            thermal = .unknown
+            throttled = nil
+        }
         
         return (
             totalRAM: totalRAM,
