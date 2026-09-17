@@ -3,16 +3,16 @@ import Foundation
 /// Protocolo abstrato para coleta de métricas de sistema do macOS
 public protocol SystemMetricsProvider: Sendable {
     func collectMetrics() async -> (
-        totalRAM: UInt64,
-        freeRAM: UInt64,
-        usedRAM: UInt64,
+        totalRAM: UInt64?,
+        freeRAM: UInt64?,
+        usedRAM: UInt64?,
         pressure: MemoryPressureLevel,
-        totalSwap: UInt64,
-        usedSwap: UInt64,
-        freeSwap: UInt64,
+        totalSwap: UInt64?,
+        usedSwap: UInt64?,
+        freeSwap: UInt64?,
         cpuPercent: Double?,
         thermal: ThermalLevel,
-        throttled: Bool
+        throttled: Bool?
     )
 }
 
@@ -21,24 +21,25 @@ public final class DarwinSystemMetricsProvider: SystemMetricsProvider, Sendable 
     public init() {}
     
     public func collectMetrics() async -> (
-        totalRAM: UInt64,
-        freeRAM: UInt64,
-        usedRAM: UInt64,
+        totalRAM: UInt64?,
+        freeRAM: UInt64?,
+        usedRAM: UInt64?,
         pressure: MemoryPressureLevel,
-        totalSwap: UInt64,
-        usedSwap: UInt64,
-        freeSwap: UInt64,
+        totalSwap: UInt64?,
+        usedSwap: UInt64?,
+        freeSwap: UInt64?,
         cpuPercent: Double?,
         thermal: ThermalLevel,
-        throttled: Bool
+        throttled: Bool?
     ) {
-        var totalRAM: UInt64 = 0
+        var totalRAMVal: UInt64 = 0
         var size = MemoryLayout<UInt64>.size
-        sysctlbyname("hw.memsize", &totalRAM, &size, nil, 0)
+        let sysctlRamRes = sysctlbyname("hw.memsize", &totalRAMVal, &size, nil, 0)
+        let totalRAM: UInt64? = (sysctlRamRes == 0 && totalRAMVal > 0) ? totalRAMVal : nil
         
-        var freeRAM: UInt64 = 0
-        var usedRAM: UInt64 = 0
-        var pressure: MemoryPressureLevel = .normal
+        var freeRAM: UInt64? = nil
+        var usedRAM: UInt64? = nil
+        var pressure: MemoryPressureLevel = .unknown
         
         // Coleta de estatísticas de VM do Mach
         var stats = vm_statistics64()
@@ -63,12 +64,16 @@ public final class DarwinSystemMetricsProvider: SystemMetricsProvider, Sendable 
             let wiredPages = UInt64(stats.wire_count)
             let compressedPages = UInt64(stats.compressor_page_count)
             
-            freeRAM = freePages * pageSize
-            usedRAM = (activePages + wiredPages + compressedPages) * pageSize
+            let calcFree = freePages * pageSize
+            let calcUsed = (activePages + wiredPages + compressedPages) * pageSize
             
-            // Heurística de pressão: se páginas comprimidas + ativas ocupam > 85% da RAM
-            if totalRAM > 0 {
-                let usageRatio = Double(usedRAM) / Double(totalRAM)
+            freeRAM = calcFree
+            usedRAM = calcUsed
+            
+            // Heurística de pressão estimada pelo Resource Guard:
+            // razão entre páginas ocupadas (ativas + wired + compressor) e total físico
+            if let total = totalRAM, total > 0 {
+                let usageRatio = Double(calcUsed) / Double(total)
                 if usageRatio > 0.90 {
                     pressure = .critical
                 } else if usageRatio > 0.80 {
@@ -76,16 +81,20 @@ public final class DarwinSystemMetricsProvider: SystemMetricsProvider, Sendable 
                 } else {
                     pressure = .normal
                 }
+            } else {
+                pressure = .unknown
             }
         } else {
-            usedRAM = totalRAM / 2
-            freeRAM = totalRAM / 2
+            // Em caso de falha Mach, retorna nil e unknown sem dados inventados
+            freeRAM = nil
+            usedRAM = nil
+            pressure = .unknown
         }
         
         // Coleta de Swap via sysctl vm.swapusage
-        var totalSwap: UInt64 = 0
-        var usedSwap: UInt64 = 0
-        var freeSwap: UInt64 = 0
+        var totalSwap: UInt64? = nil
+        var usedSwap: UInt64? = nil
+        var freeSwap: UInt64? = nil
         
         var xsw = xsw_usage()
         var xswSize = MemoryLayout<xsw_usage>.size
@@ -95,9 +104,9 @@ public final class DarwinSystemMetricsProvider: SystemMetricsProvider, Sendable 
             freeSwap = UInt64(xsw.xsu_avail)
         }
         
-        // Thermal State
-        let thermal: ThermalLevel = .nominal
-        let throttled = false
+        // Estado Térmico: Sem API estável sem privilégios IOKit/root, reporta unknown/nil explicitamente
+        let thermal: ThermalLevel = .unknown
+        let throttled: Bool? = nil
         
         return (
             totalRAM: totalRAM,
@@ -127,11 +136,13 @@ public actor ResourceMonitor {
     public func sample() async -> SystemResourceSnapshot {
         let m = await provider.collectMetrics()
         
-        if initialSwapUsed == nil {
-            initialSwapUsed = m.usedSwap
+        var delta: Int64? = nil
+        if let currentUsedSwap = m.usedSwap {
+            if initialSwapUsed == nil {
+                initialSwapUsed = currentUsedSwap
+            }
+            delta = Int64(currentUsedSwap) - Int64(initialSwapUsed ?? currentUsedSwap)
         }
-        
-        let delta: Int64 = Int64(m.usedSwap) - Int64(initialSwapUsed ?? m.usedSwap)
         
         let snapshot = SystemResourceSnapshot(
             timestamp: Date(),

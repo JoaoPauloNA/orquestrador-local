@@ -85,6 +85,7 @@ public final class OrchestrationCoordinator: ObservableObject {
     private let readinessProbe: ReadinessProbe
     private let activityProbe: ActivityProbe
     private let quotaProbe: QuotaProbe
+    public let resourceGuard: ResourceGuardCoordinator
 
     /// Tracks which service IDs have an active lock (prevents concurrent start/stop)
     private var actionLocks: Set<UUID> = []
@@ -98,13 +99,15 @@ public final class OrchestrationCoordinator: ObservableObject {
         launchAgent: LaunchAgentAdapter = LaunchAgentAdapter(),
         readinessProbe: ReadinessProbe = ReadinessProbe(),
         activityProbe: ActivityProbe = ActivityProbe(),
-        quotaProbe: QuotaProbe = QuotaProbe()
+        quotaProbe: QuotaProbe = QuotaProbe(),
+        resourceGuard: ResourceGuardCoordinator = ResourceGuardCoordinator()
     ) {
         self.catalog = catalog
         self.launchAgent = launchAgent
         self.readinessProbe = readinessProbe
         self.activityProbe = activityProbe
         self.quotaProbe = quotaProbe
+        self.resourceGuard = resourceGuard
     }
 
     // MARK: - Startup
@@ -373,6 +376,37 @@ public final class OrchestrationCoordinator: ObservableObject {
             runtime.setError("A porta de prontidão já está ocupada por outro processo; início bloqueado")
             return
         }
+
+        // Avaliação de Admissão pelo Resource Guard
+        let decision = await resourceGuard.evaluateAdmission(for: runtime.profile.label)
+        if resourceGuard.mode == .activeAdmission {
+            switch decision {
+            case .admit:
+                // Permitido continuar normalmente
+                break
+            case .queue(let reason):
+                runtime.setError("Início adiado pelo Resource Guard: \(reason)")
+                runtime.addEvent(ServiceEvent(serviceId: id, kind: .stateReconciled, message: "Início adiado (QUEUE): \(reason)"))
+                return
+            case .deferMaintenance(let reason):
+                runtime.setError("Início postergado pelo Resource Guard: \(reason)")
+                runtime.addEvent(ServiceEvent(serviceId: id, kind: .stateReconciled, message: "Início adiado (DEFER): \(reason)"))
+                return
+            case .unknown(let reason):
+                runtime.setError("Início prevenido pelo Resource Guard: \(reason)")
+                runtime.addEvent(ServiceEvent(serviceId: id, kind: .stateReconciled, message: "Início prevenido (UNKNOWN): \(reason)"))
+                return
+            }
+        } else {
+            // Modo Observador: apenas registra telemetria e decisão consultiva sem bloquear
+            switch decision {
+            case .admit:
+                break
+            case .queue(let reason), .deferMaintenance(let reason), .unknown(let reason):
+                runtime.addEvent(ServiceEvent(serviceId: id, kind: .stateReconciled, message: "Resource Guard [Observador]: \(reason)"))
+            }
+        }
+
         _ = runtime.applyTransition(to: .starting)
         runtime.addEvent(ServiceEvent(serviceId: id, kind: .started, message: "Início solicitado"))
 

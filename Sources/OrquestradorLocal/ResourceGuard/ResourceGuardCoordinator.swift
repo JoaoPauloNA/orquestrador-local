@@ -3,8 +3,8 @@ import SwiftUI
 
 /// Modo de operação do Resource Guard
 public enum ResourceGuardMode: String, Codable, Sendable {
-    case observing       // Apenas monitora e exibe métricas (sem bloquear)
-    case activeAdmission // Avalia admissão e recomenda filas/bloqueios preventivos
+    case observing       // Apenas monitora e exibe métricas (nunca bloqueia lifecycle)
+    case activeAdmission // Avalia admissão e aplica decisões preventivas em START/RESTART
 }
 
 /// Fachada Principal do Resource Guard no Orquestrador
@@ -16,10 +16,10 @@ public final class ResourceGuardCoordinator: ObservableObject {
     @Published public private(set) var activeLeases: [MaintenanceLeaseRecord] = []
     @Published public private(set) var lastDecision: String = "Monitoramento ativo"
     
-    private let monitor: ResourceMonitor
-    private let jobRegistry: JobRegistry
-    private let leaseManager: MaintenanceLeaseManager
-    private let policy: AdmissionPolicy
+    public let monitor: ResourceMonitor
+    public let jobRegistry: JobRegistry
+    public let leaseManager: MaintenanceLeaseManager
+    public let policy: AdmissionPolicy
     
     private var pollingTask: Task<Void, Never>?
     
@@ -27,12 +27,14 @@ public final class ResourceGuardCoordinator: ObservableObject {
         monitor: ResourceMonitor = ResourceMonitor(),
         jobRegistry: JobRegistry = JobRegistry(),
         leaseManager: MaintenanceLeaseManager = MaintenanceLeaseManager(),
-        policy: AdmissionPolicy = AdmissionPolicy()
+        policy: AdmissionPolicy = AdmissionPolicy(),
+        initialMode: ResourceGuardMode = .observing
     ) {
         self.monitor = monitor
         self.jobRegistry = jobRegistry
         self.leaseManager = leaseManager
         self.policy = policy
+        self.mode = initialMode
         
         startMonitoring()
     }

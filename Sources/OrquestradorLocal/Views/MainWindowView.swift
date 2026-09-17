@@ -2,7 +2,6 @@ import SwiftUI
 
 struct MainWindowView: View {
     @EnvironmentObject var coordinator: OrchestrationCoordinator
-    @StateObject private var resourceGuard = ResourceGuardCoordinator()
     @State private var selectedServiceId: UUID?
     @State private var showRegistration = false
     @State private var showDiagnostics = false
@@ -74,7 +73,7 @@ struct MainWindowView: View {
                         .keyboardShortcut(.cancelAction)
                         .padding([.top, .trailing], 12)
                 }
-                ResourceDiagnosticsView(resourceGuard: resourceGuard)
+                ResourceDiagnosticsView(resourceGuard: coordinator.resourceGuard)
             }
             .frame(minWidth: 500, minHeight: 450)
         }

@@ -40,7 +40,7 @@ public struct ResourceDiagnosticsView: View {
                         metricCard(
                             title: "Memória RAM",
                             value: snap.formattedRAMUsed,
-                            subvalue: "Pressão: \(snap.memoryPressure.rawValue.uppercased())",
+                            subvalue: "Pressão Estimada: \(formatPressure(snap.memoryPressure))",
                             systemIcon: "memorychip",
                             statusColor: colorForPressure(snap.memoryPressure)
                         )
@@ -55,16 +55,16 @@ public struct ResourceDiagnosticsView: View {
                         
                         metricCard(
                             title: "Estado Térmico",
-                            value: snap.thermalLevel.rawValue.capitalized,
-                            subvalue: snap.isThrottled ? "Throttling Ativo" : "Nominal",
+                            value: formatThermal(snap.thermalLevel),
+                            subvalue: formatThrottling(snap.isThrottled),
                             systemIcon: "thermometer.medium",
-                            statusColor: snap.isThrottled ? Color.red : Color.green
+                            statusColor: colorForThermal(snap.thermalLevel)
                         )
                         
                         metricCard(
                             title: "Última Decisão",
                             value: resourceGuard.lastDecision,
-                            subvalue: "Modo: \(resourceGuard.mode.rawValue)",
+                            subvalue: "Modo: \(resourceGuard.mode == .observing ? "Observador" : "Admissão Ativa")",
                             systemIcon: "shield.checkerboard",
                             statusColor: Color("accentNavy")
                         )
@@ -170,6 +170,15 @@ public struct ResourceDiagnosticsView: View {
         .cornerRadius(10)
     }
     
+    private func formatPressure(_ p: MemoryPressureLevel) -> String {
+        switch p {
+        case .normal: return "Normal"
+        case .warning: return "Atenção"
+        case .critical: return "Crítica"
+        case .unknown: return "Indisponível"
+        }
+    }
+    
     private func colorForPressure(_ p: MemoryPressureLevel) -> Color {
         switch p {
         case .normal: return .green
@@ -177,5 +186,29 @@ public struct ResourceDiagnosticsView: View {
         case .critical: return .red
         case .unknown: return .secondary
         }
+    }
+    
+    private func formatThermal(_ t: ThermalLevel) -> String {
+        switch t {
+        case .nominal: return "Nominal"
+        case .fair: return "Moderado"
+        case .serious: return "Elevado"
+        case .critical: return "Crítico"
+        case .unknown: return "Indisponível (N/D)"
+        }
+    }
+    
+    private func colorForThermal(_ t: ThermalLevel) -> Color {
+        switch t {
+        case .nominal, .fair: return .green
+        case .serious: return .orange
+        case .critical: return .red
+        case .unknown: return .secondary
+        }
+    }
+    
+    private func formatThrottling(_ throttled: Bool?) -> String {
+        guard let throttled else { return "Throttling: N/D" }
+        return throttled ? "Throttling Ativo" : "Nominal"
     }
 }

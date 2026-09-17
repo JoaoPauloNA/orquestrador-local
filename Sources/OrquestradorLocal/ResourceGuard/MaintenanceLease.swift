@@ -1,7 +1,7 @@
 import Foundation
 
 /// Estrutura de um Lease (Bloqueio) de Manutenção
-public struct MaintenanceLeaseRecord: Identifiable, Sendable, Codable {
+public struct MaintenanceLeaseRecord: Identifiable, Sendable, Codable, Equatable {
     public let id: UUID
     public let owner: String
     public let reason: String
@@ -22,16 +22,47 @@ public struct MaintenanceLeaseRecord: Identifiable, Sendable, Codable {
         self.expiresAt = createdAt.addingTimeInterval(durationSeconds)
     }
     
+    public init(
+        id: UUID,
+        owner: String,
+        reason: String,
+        createdAt: Date,
+        expiresAt: Date
+    ) {
+        self.id = id
+        self.owner = owner
+        self.reason = reason
+        self.createdAt = createdAt
+        self.expiresAt = expiresAt
+    }
+    
     public var isExpired: Bool {
         return Date() > expiresAt
     }
 }
 
-/// Gerenciador de Leases de Manutenção para adiar restarts/atualizações em jobs ativos
+/// Gerenciador de Leases de Manutenção com Persistência Atômica em Disco
 public actor MaintenanceLeaseManager {
     private var activeLeases: [UUID: MaintenanceLeaseRecord] = [:]
+    private let storageURL: URL?
     
-    public init() {}
+    public init(storageURL: URL? = nil) {
+        let resolvedURL: URL?
+        if let storageURL {
+            resolvedURL = storageURL
+        } else {
+            let appSupport = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask).first
+            let dir = appSupport?.appendingPathComponent("OrquestradorLocal", isDirectory: true)
+            if let dir {
+                try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+                resolvedURL = dir.appendingPathComponent("maintenance_leases.json")
+            } else {
+                resolvedURL = nil
+            }
+        }
+        self.storageURL = resolvedURL
+        self.activeLeases = Self.loadLeases(from: resolvedURL)
+    }
     
     public func acquireLease(owner: String, reason: String, durationSeconds: TimeInterval = 300) -> MaintenanceLeaseRecord {
         cleanExpired()
@@ -41,6 +72,7 @@ public actor MaintenanceLeaseManager {
             durationSeconds: durationSeconds
         )
         activeLeases[lease.id] = lease
+        saveToDisk()
         return lease
     }
     
@@ -52,14 +84,16 @@ public actor MaintenanceLeaseManager {
             owner: existing.owner,
             reason: existing.reason,
             createdAt: existing.createdAt,
-            durationSeconds: existing.expiresAt.timeIntervalSince(existing.createdAt) + extendSeconds
+            expiresAt: existing.expiresAt.addingTimeInterval(extendSeconds)
         )
         activeLeases[id] = renewed
+        saveToDisk()
         return renewed
     }
     
     public func releaseLease(id: UUID) {
         activeLeases.removeValue(forKey: id)
+        saveToDisk()
     }
     
     public func isMaintenanceBlocked() -> (blocked: Bool, activeReasons: [String]) {
@@ -78,6 +112,49 @@ public actor MaintenanceLeaseManager {
     
     private func cleanExpired() {
         let now = Date()
+        let beforeCount = activeLeases.count
         activeLeases = activeLeases.filter { $0.value.expiresAt > now }
+        if activeLeases.count != beforeCount {
+            saveToDisk()
+        }
+    }
+    
+    private static func loadLeases(from url: URL?) -> [UUID: MaintenanceLeaseRecord] {
+        guard let url, FileManager.default.fileExists(atPath: url.path) else {
+            return [:]
+        }
+        
+        do {
+            let data = try Data(contentsOf: url)
+            let decoder = JSONDecoder()
+            decoder.dateDecodingStrategy = .iso8601
+            let decoded = try decoder.decode([MaintenanceLeaseRecord].self, from: data)
+            let now = Date()
+            var loaded: [UUID: MaintenanceLeaseRecord] = [:]
+            for lease in decoded {
+                if lease.expiresAt > now {
+                    loaded[lease.id] = lease
+                }
+            }
+            return loaded
+        } catch {
+            // Em caso de corrupção ou erro de decoding, adota estado seguro vazio sem crash
+            return [:]
+        }
+    }
+    
+    private func saveToDisk() {
+        guard let storageURL else { return }
+        
+        do {
+            let encoder = JSONEncoder()
+            encoder.dateEncodingStrategy = .iso8601
+            encoder.outputFormatting = .prettyPrinted
+            let list = Array(activeLeases.values)
+            let data = try encoder.encode(list)
+            try data.write(to: storageURL, options: .atomic)
+        } catch {
+            // Falha na persistência tratada silenciosamente sem travar a execução em memória
+        }
     }
 }
