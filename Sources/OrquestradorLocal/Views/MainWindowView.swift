@@ -2,8 +2,10 @@ import SwiftUI
 
 struct MainWindowView: View {
     @EnvironmentObject var coordinator: OrchestrationCoordinator
+    @StateObject private var resourceGuard = ResourceGuardCoordinator()
     @State private var selectedServiceId: UUID?
     @State private var showRegistration = false
+    @State private var showDiagnostics = false
 
     var body: some View {
         NavigationSplitView {
@@ -13,6 +15,15 @@ struct MainWindowView: View {
         }
         .navigationSplitViewColumnWidth(min: 220, ideal: 240, max: 280)
         .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button {
+                    showDiagnostics = true
+                } label: {
+                    Label("Recursos", systemImage: "gauge.with.dots.needle.bottom.50percent")
+                }
+                .accessibilityLabel("Abrir diagnóstico do Resource Guard")
+                .help("Diagnóstico de Recursos do Sistema")
+            }
             ToolbarItem(placement: .primaryAction) {
                 Button {
                     showRegistration = true
@@ -54,6 +65,18 @@ struct MainWindowView: View {
         .sheet(isPresented: $showRegistration) {
             RegistrationView()
                 .environmentObject(coordinator)
+        }
+        .sheet(isPresented: $showDiagnostics) {
+            VStack {
+                HStack {
+                    Spacer()
+                    Button("Fechar") { showDiagnostics = false }
+                        .keyboardShortcut(.cancelAction)
+                        .padding([.top, .trailing], 12)
+                }
+                ResourceDiagnosticsView(resourceGuard: resourceGuard)
+            }
+            .frame(minWidth: 500, minHeight: 450)
         }
         .alert("Erro no catálogo", isPresented: .constant(coordinator.catalogError != nil)) {
             Button("OK") {}

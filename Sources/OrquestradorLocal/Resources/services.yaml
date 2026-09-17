@@ -77,3 +77,16 @@ grafico:
   activity_url:
   open_url: http://127.0.0.1:3011/
   description: Painel de gráficos da Segunda Mente em build de produção
+
+localtranscriber:
+  name: LocalTranscriber
+  label: com.joaopaulo.localtranscriber
+  plist_path: /Users/joaopaulo/Library/LaunchAgents/com.joaopaulo.localtranscriber.plist
+  executable_path: /Users/joaopaulo/Documents/Projetos/Pessoal/LLM/LocalTranscriber/.venv/bin/python3
+  working_directory: /Users/joaopaulo/Documents/Projetos/Pessoal/LLM/LocalTranscriber
+  readiness_url: http://127.0.0.1:8766/api/health
+  readiness_identity_kind: jsonTopLevelKey
+  readiness_identity: status
+  activity_url:
+  open_url: http://127.0.0.1:8766/
+  description: Transcritor de áudio local com modelo Whisper Apple Silicon

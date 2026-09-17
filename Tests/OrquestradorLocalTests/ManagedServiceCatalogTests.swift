@@ -10,7 +10,8 @@ final class ManagedServiceCatalogTests: XCTestCase {
             "com.joaopaulo.sm-graficos",
             "local.comfyui",
             "com.joaopaulo.mflux-studio",
-            "com.joaopaulo.anythingllm"
+            "com.joaopaulo.anythingllm",
+            "com.joaopaulo.localtranscriber"
         ]))
         XCTAssertTrue(definitions.allSatisfy { !$0.rawInput.name.contains(";") })
         XCTAssertEqual(definitions.first(where: { $0.label == "local.comfyui" })?.rawInput.readinessIdentityKind, .jsonTopLevelKey)

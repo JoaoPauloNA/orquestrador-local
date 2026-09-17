@@ -16,11 +16,7 @@ Aplicativo macOS nativo (SwiftUI) para cadastrar e operar, com segurança, Launc
 
 ## Catálogo declarativo de serviços
 
-`Sources/OrquestradorLocal/Resources/services.yaml` concentra os três perfis
-locais gerenciados: Segunda Mente, ComfyUI e mflux-studio. Na inicialização, o
-aplicativo lê e valida os LaunchAgents já existentes; o catálogo não cria,
-substitui, descarrega ou desabilita esses arquivos. Cada detalhe do serviço
-exibe endpoint, porta, plist, diretório, PID, último erro e saída limitada.
+`Sources/OrquestradorLocal/Resources/services.yaml` concentra os perfis locais gerenciados: Segunda Mente, Grafico (SM_graficos), LocalTranscriber, ComfyUI, mflux-studio, ScreenPipe e AnythingLLM. Na inicialização, o aplicativo lê e valida os LaunchAgents já existentes em `~/Library/LaunchAgents/`; o catálogo não cria, substitui, descarrega ou desabilita esses arquivos. Cada detalhe do serviço exibe endpoint, porta, plist, diretório, PID, último erro e saída limitada.
 
 O botão **Reiniciar** usa a mesma parada graciosa e as mesmas proteções de
 atividade do botão **Parar**. O estado pronto só é atribuído depois de o
