@@ -1,0 +1,156 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 560" width="840" height="560" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif">
+  <defs>
+    <style>
+      .bg { fill: #f8fafc; }
+      .card { fill: #ffffff; stroke: #e2e8f0; stroke-width: 1; rx: 12; }
+      .header-title { font-size: 20px; font-weight: 700; fill: #0f172a; }
+      .header-sub { font-size: 13px; font-weight: 400; fill: #64748b; }
+      .grid-box { fill: #f8fafc; stroke: #cbd5e1; stroke-width: 1; stroke-dasharray: 3 3; rx: 8; }
+      .label-title { font-size: 13px; font-weight: 600; fill: #0f172a; }
+      .label-sf { font-size: 11px; font-family: ui-monospace, Menlo, monospace; fill: #64748b; }
+      .watermark { font-size: 10px; font-weight: 800; fill: #94a3b8; letter-spacing: 0.08em; }
+    </style>
+  </defs>
+
+  <!-- Background Canvas -->
+  <rect width="100%" height="100%" class="bg"/>
+
+  <!-- Main Card Container -->
+  <rect x="30" y="30" width="780" height="500" class="card"/>
+
+  <!-- Header Section -->
+  <text x="60" y="70" class="header-title">Conjunto de Ícones de Ação e Estado — Orquestrador Local</text>
+  <text x="60" y="92" class="header-sub">Ícones vetoriais nativos (traço 1.75px) com mapeamento 1:1 para SF Symbols no ecossistema macOS.</text>
+  <text x="750" y="70" text-anchor="end" class="watermark">CONCEITO / DADOS SINTÉTICOS</text>
+
+  <!-- Section 1: Ações Principais (Linha 1) -->
+  <text x="60" y="135" font-size="12px" font-weight="700" fill="#059669" letter-spacing="0.05em">AÇÕES PERMITIDAS (4 VERBOS CANÔNICOS)</text>
+
+  <!-- 1.1 Iniciar -->
+  <g transform="translate(60, 150)">
+    <rect width="160" height="120" class="grid-box"/>
+    <!-- Icon 24x24 centered -->
+    <g transform="translate(68, 24)" fill="none" stroke="#0f172a" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="5 3 19 12 5 21 5 3" fill="#0f172a"/>
+    </g>
+    <text x="80" y="76" text-anchor="middle" class="label-title">Iniciar</text>
+    <text x="80" y="96" text-anchor="middle" class="label-sf">play.fill</text>
+  </g>
+
+  <!-- 1.2 Parar -->
+  <g transform="translate(245, 150)">
+    <rect width="160" height="120" class="grid-box"/>
+    <g transform="translate(68, 24)" fill="none" stroke="#dc2626" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="4" y="4" width="16" height="16" rx="2" fill="#dc2626"/>
+    </g>
+    <text x="80" y="76" text-anchor="middle" class="label-title">Parar</text>
+    <text x="80" y="96" text-anchor="middle" class="label-sf">stop.fill</text>
+  </g>
+
+  <!-- 1.3 Abrir -->
+  <g transform="translate(430, 150)">
+    <rect width="160" height="120" class="grid-box"/>
+    <g transform="translate(68, 24)" fill="none" stroke="#0284c7" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+      <polyline points="15 3 21 3 21 9"/>
+      <line x1="10" y1="14" x2="21" y2="3"/>
+    </g>
+    <text x="80" y="76" text-anchor="middle" class="label-title">Abrir</text>
+    <text x="80" y="96" text-anchor="middle" class="label-sf">arrow.up.forward.square</text>
+  </g>
+
+  <!-- 1.4 Detalhes -->
+  <g transform="translate(615, 150)">
+    <rect width="160" height="120" class="grid-box"/>
+    <g transform="translate(68, 24)" fill="none" stroke="#64748b" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <line x1="12" y1="16" x2="12" y2="12"/>
+      <line x1="12" y1="8" x2="12.01" y2="8"/>
+    </g>
+    <text x="80" y="76" text-anchor="middle" class="label-title">Detalhes</text>
+    <text x="80" y="96" text-anchor="middle" class="label-sf">info.circle</text>
+  </g>
+
+  <!-- Section 2: Estados do Serviço (Linha 2 e 3) -->
+  <text x="60" y="305" font-size="12px" font-weight="700" fill="#0f172a" letter-spacing="0.05em">ESTADOS OPERACIONAIS DO SERVIÇO</text>
+
+  <!-- 2.1 Pronto -->
+  <g transform="translate(60, 320)">
+    <rect width="135" height="100" class="grid-box"/>
+    <g transform="translate(55, 18)" fill="none" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10" fill="#ecfdf5"/>
+      <polyline points="16 9 10.5 15 8 12.5"/>
+    </g>
+    <text x="67" y="68" text-anchor="middle" class="label-title" fill="#059669">Pronto</text>
+    <text x="67" y="86" text-anchor="middle" class="label-sf">checkmark.circle.fill</text>
+  </g>
+
+  <!-- 2.2 Iniciando -->
+  <g transform="translate(205, 320)">
+    <rect width="135" height="100" class="grid-box"/>
+    <g transform="translate(55, 18)" fill="none" stroke="#d97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 12a9 9 0 1 1-6.219-8.56" stroke-dasharray="3 3"/>
+      <polyline points="21 3 21 8 16 8"/>
+    </g>
+    <text x="67" y="68" text-anchor="middle" class="label-title" fill="#d97706">Iniciando...</text>
+    <text x="67" y="86" text-anchor="middle" class="label-sf">arrow.triangle.2.circlepath</text>
+  </g>
+
+  <!-- 2.3 Parando -->
+  <g transform="translate(350, 320)">
+    <rect width="135" height="100" class="grid-box"/>
+    <g transform="translate(55, 18)" fill="none" stroke="#d97706" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10" stroke-dasharray="2 4"/>
+      <rect x="9" y="9" width="6" height="6" fill="#d97706"/>
+    </g>
+    <text x="67" y="68" text-anchor="middle" class="label-title" fill="#d97706">Parando...</text>
+    <text x="67" y="86" text-anchor="middle" class="label-sf">circle.dotted</text>
+  </g>
+
+  <!-- 2.4 Parado -->
+  <g transform="translate(495, 320)">
+    <rect width="135" height="100" class="grid-box"/>
+    <g transform="translate(55, 18)" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <rect x="9" y="9" width="6" height="6" fill="#64748b"/>
+    </g>
+    <text x="67" y="68" text-anchor="middle" class="label-title" fill="#64748b">Parado</text>
+    <text x="67" y="86" text-anchor="middle" class="label-sf">stop.circle</text>
+  </g>
+
+  <!-- 2.5 Erro -->
+  <g transform="translate(640, 320)">
+    <rect width="135" height="100" class="grid-box"/>
+    <g transform="translate(55, 18)" fill="none" stroke="#dc2626" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" fill="#fef2f2"/>
+      <line x1="12" y1="9" x2="12" y2="13"/>
+      <line x1="12" y1="17" x2="12.01" y2="17"/>
+    </g>
+    <text x="67" y="68" text-anchor="middle" class="label-title" fill="#dc2626">Erro</text>
+    <text x="67" y="86" text-anchor="middle" class="label-sf">exclamationmark.triangle</text>
+  </g>
+
+  <!-- 2.6 Externo -->
+  <g transform="translate(205, 430)">
+    <rect width="135" height="85" class="grid-box"/>
+    <g transform="translate(55, 12)" fill="none" stroke="#0284c7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="3" width="18" height="18" rx="2"/>
+      <path d="M8 12h8M12 8l4 4-4 4"/>
+    </g>
+    <text x="67" y="58" text-anchor="middle" class="label-title" fill="#0284c7">Externo</text>
+    <text x="67" y="74" text-anchor="middle" class="label-sf">arrow.forward.square</text>
+  </g>
+
+  <!-- 2.7 Desconhecido -->
+  <g transform="translate(495, 430)">
+    <rect width="135" height="85" class="grid-box"/>
+    <g transform="translate(55, 12)" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/>
+      <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+      <line x1="12" y1="17" x2="12.01" y2="17"/>
+    </g>
+    <text x="67" y="58" text-anchor="middle" class="label-title" fill="#64748b">Desconhecido</text>
+    <text x="67" y="74" text-anchor="middle" class="label-sf">questionmark.circle</text>
+  </g>
+
+</svg>

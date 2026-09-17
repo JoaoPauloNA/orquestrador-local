@@ -1,0 +1,172 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 680" width="960" height="680" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif">
+  <defs>
+    <style>
+      .card-base { fill: #ffffff; stroke: #e2e8f0; stroke-width: 1; rx: 10; }
+      .badge-text { font-size: 11px; font-weight: 700; }
+      .title-text { font-size: 13px; font-weight: 700; fill: #0f172a; }
+      .meta-text { font-size: 11px; font-weight: 400; fill: #64748b; }
+      .action-pill { font-size: 10px; font-weight: 600; }
+    </style>
+  </defs>
+
+  <!-- Background Canvas -->
+  <rect width="100%" height="100%" fill="#f8fafc"/>
+
+  <!-- Page Header -->
+  <g transform="translate(40, 35)">
+    <text x="0" y="0" font-size="20" font-weight="700" fill="#0f172a">Matriz Visual dos 7 Estados de Serviço</text>
+    <text x="0" y="22" font-size="12" font-weight="400" fill="#64748b">Especificação canônica de cor, badge, ícone vetorial e regras de ação para a engenharia SwiftUI.</text>
+    <g transform="translate(690, -10)">
+      <rect width="190" height="22" rx="4" fill="#f1f5f9"/>
+      <text x="95" y="15" font-size="9" font-weight="800" fill="#64748b" text-anchor="middle" letter-spacing="0.08em">CONCEITO / DADOS SINTÉTICOS</text>
+    </g>
+  </g>
+
+  <!-- Row 1: Estados 1, 2, 3 -->
+  <!-- 1. Iniciando -->
+  <g transform="translate(40, 80)">
+    <rect width="275" height="160" class="card-base"/>
+    <path d="M 0 10 Q 0 0 10 0 L 10 160 Q 0 160 0 150 Z" fill="#d97706"/>
+    
+    <text x="18" y="26" class="title-text">Iniciando</text>
+    <rect x="150" y="12" width="110" height="22" rx="11" fill="#fef3c7" stroke="#fde68a" stroke-width="1"/>
+    <text x="205" y="27" class="badge-text" fill="#b45309" text-anchor="middle">Iniciando...</text>
+    
+    <text x="18" y="52" class="meta-text">Processo lançado via supervisor.</text>
+    <text x="18" y="68" class="meta-text">Aguardando bind na porta e HTTP 200.</text>
+    
+    <line x1="18" y1="90" x2="257" y2="90" stroke="#f1f5f9" stroke-width="1"/>
+    <text x="18" y="110" font-size="10" font-weight="700" fill="#64748b">AÇÕES HABILITADAS:</text>
+    <text x="18" y="130" class="action-pill" fill="#64748b">Iniciar (Não) · Parar (Sim) · Abrir (Não)</text>
+    <text x="18" y="145" class="meta-text" fill="#d97706">Ícone SF: arrow.triangle.2.circlepath</text>
+  </g>
+
+  <!-- 2. Pronto -->
+  <g transform="translate(342, 80)">
+    <rect width="275" height="160" class="card-base"/>
+    <path d="M 0 10 Q 0 0 10 0 L 10 160 Q 0 160 0 150 Z" fill="#059669"/>
+    
+    <text x="18" y="26" class="title-text">Pronto</text>
+    <rect x="150" y="12" width="110" height="22" rx="11" fill="#ecfdf5" stroke="#a7f3d0" stroke-width="1"/>
+    <text x="205" y="27" class="badge-text" fill="#047857" text-anchor="middle">Pronto</text>
+    
+    <text x="18" y="52" class="meta-text">Healthcheck respondendo 200 OK.</text>
+    <text x="18" y="68" class="meta-text">Porta local ativa e acessível.</text>
+    
+    <line x1="18" y1="90" x2="257" y2="90" stroke="#f1f5f9" stroke-width="1"/>
+    <text x="18" y="110" font-size="10" font-weight="700" fill="#64748b">AÇÕES HABILITADAS:</text>
+    <text x="18" y="130" class="action-pill" fill="#059669">Iniciar (Não) · Parar (Sim) · Abrir (Sim)</text>
+    <text x="18" y="145" class="meta-text" fill="#059669">Ícone SF: checkmark.circle.fill</text>
+  </g>
+
+  <!-- 3. Parando -->
+  <g transform="translate(645, 80)">
+    <rect width="275" height="160" class="card-base"/>
+    <path d="M 0 10 Q 0 0 10 0 L 10 160 Q 0 160 0 150 Z" fill="#d97706"/>
+    
+    <text x="18" y="26" class="title-text">Parando</text>
+    <rect x="150" y="12" width="110" height="22" rx="11" fill="#fef3c7" stroke="#fde68a" stroke-width="1"/>
+    <text x="205" y="27" class="badge-text" fill="#b45309" text-anchor="middle">Parando...</text>
+    
+    <text x="18" y="52" class="meta-text">Sinal de encerramento enviado (SIGTERM).</text>
+    <text x="18" y="68" class="meta-text">Aguardando liberação de recursos.</text>
+    
+    <line x1="18" y1="90" x2="257" y2="90" stroke="#f1f5f9" stroke-width="1"/>
+    <text x="18" y="110" font-size="10" font-weight="700" fill="#64748b">AÇÕES HABILITADAS:</text>
+    <text x="18" y="130" class="action-pill" fill="#64748b">Aguardando ciclo de encerramento</text>
+    <text x="18" y="145" class="meta-text" fill="#d97706">Ícone SF: circle.dotted</text>
+  </g>
+
+  <!-- Row 2: Estados 4, 5, 6 -->
+  <!-- 4. Parado -->
+  <g transform="translate(40, 260)">
+    <rect width="275" height="160" class="card-base"/>
+    <path d="M 0 10 Q 0 0 10 0 L 10 160 Q 0 160 0 150 Z" fill="#64748b"/>
+    
+    <text x="18" y="26" class="title-text">Parado</text>
+    <rect x="150" y="12" width="110" height="22" rx="11" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+    <text x="205" y="27" class="badge-text" fill="#475569" text-anchor="middle">Parado</text>
+    
+    <text x="18" y="52" class="meta-text">Processo inativo no sistema.</text>
+    <text x="18" y="68" class="meta-text">Porta livre e consumo de memória zerado.</text>
+    
+    <line x1="18" y1="90" x2="257" y2="90" stroke="#f1f5f9" stroke-width="1"/>
+    <text x="18" y="110" font-size="10" font-weight="700" fill="#64748b">AÇÕES HABILITADAS:</text>
+    <text x="18" y="130" class="action-pill" fill="#0f172a">Iniciar (Sim) · Parar (Não) · Abrir (Não)</text>
+    <text x="18" y="145" class="meta-text" fill="#64748b">Ícone SF: stop.circle</text>
+  </g>
+
+  <!-- 5. Erro -->
+  <g transform="translate(342, 260)">
+    <rect width="275" height="160" class="card-base"/>
+    <path d="M 0 10 Q 0 0 10 0 L 10 160 Q 0 160 0 150 Z" fill="#dc2626"/>
+    
+    <text x="18" y="26" class="title-text">Erro</text>
+    <rect x="150" y="12" width="110" height="22" rx="11" fill="#fef2f2" stroke="#fecaca" stroke-width="1"/>
+    <text x="205" y="27" class="badge-text" fill="#b91c1c" text-anchor="middle">Erro de Execução</text>
+    
+    <text x="18" y="52" class="meta-text">Falha de inicialização ou terminação.</text>
+    <text x="18" y="68" class="meta-text">Log de erro disponível em Detalhes.</text>
+    
+    <line x1="18" y1="90" x2="257" y2="90" stroke="#f1f5f9" stroke-width="1"/>
+    <text x="18" y="110" font-size="10" font-weight="700" fill="#64748b">AÇÕES HABILITADAS:</text>
+    <text x="18" y="130" class="action-pill" fill="#dc2626">Iniciar (Sim) · Detalhes (Recomendado)</text>
+    <text x="18" y="145" class="meta-text" fill="#dc2626">Ícone SF: exclamationmark.triangle.fill</text>
+  </g>
+
+  <!-- 6. Externo -->
+  <g transform="translate(645, 260)">
+    <rect width="275" height="160" class="card-base"/>
+    <path d="M 0 10 Q 0 0 10 0 L 10 160 Q 0 160 0 150 Z" fill="#0284c7"/>
+    
+    <text x="18" y="26" class="title-text">Externo</text>
+    <rect x="130" y="12" width="130" height="22" rx="11" fill="#f0f9ff" stroke="#bae6fd" stroke-width="1"/>
+    <text x="195" y="27" class="badge-text" fill="#0369a1" text-anchor="middle">Externamente Gerenciado</text>
+    
+    <text x="18" y="52" class="meta-text">Processo ativo fora do supervisor.</text>
+    <text x="18" y="68" class="meta-text">Apenas leitura e observação permitidas.</text>
+    
+    <line x1="18" y1="90" x2="257" y2="90" stroke="#f1f5f9" stroke-width="1"/>
+    <text x="18" y="110" font-size="10" font-weight="700" fill="#64748b">AÇÕES HABILITADAS:</text>
+    <text x="18" y="130" class="action-pill" fill="#0284c7">Iniciar (Não) · Parar (Não) · Abrir (Sim)</text>
+    <text x="18" y="145" class="meta-text" fill="#0284c7">Ícone SF: arrow.up.forward.square</text>
+  </g>
+
+  <!-- Row 3: Estado 7 (Desconhecido) e Notas Arquiteturais -->
+  <!-- 7. Desconhecido -->
+  <g transform="translate(40, 440)">
+    <rect width="275" height="160" class="card-base"/>
+    <path d="M 0 10 Q 0 0 10 0 L 10 160 Q 0 160 0 150 Z" fill="#94a3b8"/>
+    
+    <text x="18" y="26" class="title-text">Desconhecido</text>
+    <rect x="135" y="12" width="125" height="22" rx="11" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+    <text x="197" y="27" class="badge-text" fill="#64748b" text-anchor="middle">Atividade Desconhecida</text>
+    
+    <text x="18" y="52" class="meta-text">Serviço sem métricas de atividade.</text>
+    <text x="18" y="68" class="meta-text">Exige checagem humana prévia à parada.</text>
+    
+    <line x1="18" y1="90" x2="257" y2="90" stroke="#f1f5f9" stroke-width="1"/>
+    <text x="18" y="110" font-size="10" font-weight="700" fill="#64748b">AÇÕES HABILITADAS:</text>
+    <text x="18" y="130" class="action-pill" fill="#64748b">Parar (Condicionado à confirmação)</text>
+    <text x="18" y="145" class="meta-text" fill="#94a3b8">Ícone SF: questionmark.circle</text>
+  </g>
+
+  <!-- Summary Card: Protocolo de Transições -->
+  <g transform="translate(342, 440)">
+    <rect width="578" height="160" rx="10" fill="#0f172a"/>
+    <text x="24" y="32" font-size="13" font-weight="700" fill="#ffffff">REGRAS DE CONFINAMENTO DE ESTADOS (INVARIANTE F2)</text>
+    <text x="24" y="56" font-size="11" font-weight="400" fill="#94a3b8">1. Transições são estritamente unidirecionais por comando do operador.</text>
+    <text x="24" y="74" font-size="11" font-weight="400" fill="#94a3b8">2. O estado "Pronto" só pode ser declarado após resposta HTTP 200 do healthcheck configurado.</text>
+    <text x="24" y="92" font-size="11" font-weight="400" fill="#94a3b8">3. "Externo" impede envio de sinais destrutivos via launchctl para evitar corromper tarefas de terceiros.</text>
+    <text x="24" y="110" font-size="11" font-weight="400" fill="#94a3b8">4. Nenhum comando de terminação forçada (SIGKILL) é exposto ao operador na interface.</text>
+    <g transform="translate(24, 126)">
+      <rect width="200" height="20" rx="4" fill="#1e293b"/>
+      <text x="100" y="14" font-size="10" font-weight="700" fill="#38bdf8" text-anchor="middle">Máquina de Estados Confinada</text>
+    </g>
+  </g>
+
+  <!-- Footer Watermark -->
+  <g transform="translate(40, 625)">
+    <text x="0" y="14" font-size="10" font-weight="800" fill="#94a3b8" letter-spacing="0.08em">CONCEITO / DADOS SINTÉTICOS · MATRIZ DE ESTADOS DO ORQUESTRADOR LOCAL</text>
+  </g>
+</svg>

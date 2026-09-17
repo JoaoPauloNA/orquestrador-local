@@ -1,0 +1,191 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 640" width="960" height="640" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', sans-serif">
+  <defs>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#0f172a" flood-opacity="0.12"/>
+    </filter>
+    <filter id="cardShadow" x="-2%" y="-2%" width="104%" height="108%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#0f172a" flood-opacity="0.04"/>
+    </filter>
+  </defs>
+
+  <!-- Window Frame -->
+  <rect x="20" y="20" width="920" height="600" rx="16" ry="16" fill="#ffffff" filter="url(#shadow)" stroke="#cbd5e1" stroke-width="1"/>
+
+  <!-- Top Navigation & Title Bar -->
+  <rect x="20" y="20" width="920" height="52" rx="16" ry="16" fill="#f8fafc"/>
+  <rect x="20" y="52" width="920" height="20" fill="#f8fafc"/>
+  <line x1="20" y1="72" x2="940" y2="72" stroke="#e2e8f0" stroke-width="1"/>
+
+  <!-- Traffic Lights -->
+  <circle cx="44" cy="46" r="6" fill="#ff5f56" stroke="#e0443e" stroke-width="0.5"/>
+  <circle cx="64" cy="46" r="6" fill="#ffbd2e" stroke="#dea123" stroke-width="0.5"/>
+  <circle cx="84" cy="46" r="6" fill="#27c93f" stroke="#1aab29" stroke-width="0.5"/>
+
+  <!-- Back Button & Breadcrumbs -->
+  <g transform="translate(120, 36)">
+    <rect width="68" height="22" rx="5" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+    <g transform="translate(6, 4)" fill="none" stroke="#0f172a" stroke-width="1.75">
+      <polyline points="7 1 2 6 7 11"/>
+      <line x1="3" y1="6" x2="12" y2="6"/>
+    </g>
+    <text x="22" y="15" font-size="11" font-weight="600" fill="#0f172a">Catálogo</text>
+    <text x="78" y="15" font-size="12" font-weight="400" fill="#94a3b8">/</text>
+    <text x="92" y="15" font-size="13" font-weight="700" fill="#0f172a">mflux-studio</text>
+  </g>
+
+  <!-- Watermark in Top Right -->
+  <g transform="translate(730, 40)">
+    <rect width="190" height="20" rx="4" fill="#f1f5f9"/>
+    <text x="95" y="14" font-size="9" font-weight="800" fill="#64748b" text-anchor="middle" letter-spacing="0.06em">CONCEITO / DADOS SINTÉTICOS</text>
+  </g>
+
+  <!-- Service Header Card -->
+  <g transform="translate(50, 95)">
+    <text x="0" y="24" font-size="22" font-weight="800" fill="#0f172a">mflux-studio</text>
+    <text x="0" y="46" font-size="12" font-weight="400" fill="#64748b" font-family="ui-monospace, Menlo, monospace">ID do Processo: 48210 · Supervisor: local.mflux-studio.plist · ~/Projetos/mflux-studio</text>
+
+    <!-- State Badge (Pronto) -->
+    <g transform="translate(540, 4)">
+      <rect width="110" height="28" rx="14" fill="#ecfdf5" stroke="#a7f3d0" stroke-width="1"/>
+      <g transform="translate(10, 6)" fill="none" stroke="#059669" stroke-width="2">
+        <circle cx="8" cy="8" r="7"/>
+        <polyline points="5 8 7.5 10.5 11 6"/>
+      </g>
+      <text x="34" y="18" font-size="11" font-weight="700" fill="#047857">Pronto</text>
+    </g>
+
+    <!-- Action Buttons for this Project -->
+    <g transform="translate(660, 4)">
+      <!-- Parar -->
+      <rect width="80" height="28" rx="6" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+      <rect x="10" y="9" width="10" height="10" rx="1" fill="#dc2626"/>
+      <text x="26" y="18" font-size="11" font-weight="600" fill="#0f172a">Parar</text>
+
+      <!-- Abrir -->
+      <g transform="translate(88, 0)">
+        <rect width="100" height="28" rx="6" fill="#0f172a"/>
+        <g transform="translate(10, 7)" fill="none" stroke="#ffffff" stroke-width="1.75">
+          <path d="M10 7v4a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h4"/>
+          <polyline points="8 2 12 2 12 6"/>
+          <line x1="5" y1="9" x2="12" y2="2"/>
+        </g>
+        <text x="28" y="18" font-size="11" font-weight="600" fill="#ffffff">Abrir Web</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- 3 Metric Status Cards Grid -->
+  <g transform="translate(50, 165)">
+    <!-- Card 1: Prontidão & Endpoint -->
+    <g filter="url(#cardShadow)">
+      <rect width="265" height="110" rx="10" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+      <text x="16" y="24" font-size="11" font-weight="700" fill="#64748b" letter-spacing="0.04em">ENDPOINT DE PRONTIDÃO</text>
+      <text x="16" y="48" font-size="13" font-weight="700" fill="#059669">HTTP 200 OK</text>
+      <text x="110" y="48" font-size="11" font-weight="500" fill="#64748b">(latência 42ms)</text>
+      <text x="16" y="72" font-size="11" font-family="ui-monospace, Menlo, monospace" fill="#0f172a">http://127.0.0.1:8080/health</text>
+      <text x="16" y="92" font-size="10" font-weight="400" fill="#94a3b8">Checagem periódica: cada 3.0s</text>
+    </g>
+
+    <!-- Card 2: Atividade -->
+    <g transform="translate(285, 0)" filter="url(#cardShadow)">
+      <rect width="265" height="110" rx="10" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+      <text x="16" y="24" font-size="11" font-weight="700" fill="#64748b" letter-spacing="0.04em">ESTADO DE ATIVIDADE</text>
+      <text x="16" y="48" font-size="14" font-weight="700" fill="#0f172a">Ocioso / Sem Tarefas</text>
+      <text x="16" y="72" font-size="11" font-weight="400" fill="#64748b">Última requisição processada há 4m 18s</text>
+      <text x="16" y="92" font-size="10" font-weight="600" fill="#059669">Seguro para encerramento manual</text>
+    </g>
+
+    <!-- Card 3: Consumo de Memória (Sintético) -->
+    <g transform="translate(570, 0)" filter="url(#cardShadow)">
+      <rect width="280" height="110" rx="10" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+      <text x="16" y="24" font-size="11" font-weight="700" fill="#64748b" letter-spacing="0.04em">MEMÓRIA RESIDENTE ESTIMADA</text>
+      <text x="16" y="48" font-size="16" font-weight="800" fill="#0f172a">2.4 GB <tspan font-size="11" font-weight="400" fill="#64748b">/ 16.0 GB total</tspan></text>
+      
+      <!-- Progress Bar -->
+      <rect x="16" y="62" width="248" height="8" rx="4" fill="#e2e8f0"/>
+      <rect x="16" y="62" width="42" height="8" rx="4" fill="#059669"/>
+
+      <text x="16" y="92" font-size="10" font-weight="500" fill="#94a3b8">Valor sintético para validação visual de layout</text>
+    </g>
+  </g>
+
+  <!-- Events History Section (Max 5 items) -->
+  <g transform="translate(50, 300)">
+    <text x="0" y="0" font-size="14" font-weight="700" fill="#0f172a">Histórico Recente de Eventos do Serviço (Últimos 5)</text>
+    
+    <!-- Table Container -->
+    <g transform="translate(0, 15)">
+      <rect width="850" height="215" rx="10" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+      
+      <!-- Table Header -->
+      <rect width="850" height="34" rx="10" fill="#f1f5f9"/>
+      <rect y="24" width="850" height="10" fill="#f1f5f9"/>
+      <line x1="0" y1="34" x2="850" y2="34" stroke="#e2e8f0" stroke-width="1"/>
+      
+      <text x="20" y="22" font-size="11" font-weight="700" fill="#64748b">HORÁRIO</text>
+      <text x="140" y="22" font-size="11" font-weight="700" fill="#64748b">TIPO DE EVENTO</text>
+      <text x="320" y="22" font-size="11" font-weight="700" fill="#64748b">DETALHE OPERACIONAL</text>
+      <text x="740" y="22" font-size="11" font-weight="700" fill="#64748b">RESULTADO</text>
+
+      <!-- Row 1 -->
+      <g transform="translate(0, 35)">
+        <text x="20" y="24" font-size="11" font-family="ui-monospace, Menlo, monospace" fill="#64748b">10:01:12</text>
+        <text x="140" y="24" font-size="12" font-weight="600" fill="#0f172a">Healthcheck OK</text>
+        <text x="320" y="24" font-size="11" fill="#0f172a">Endpoint /health retornou código 200 (latência 42ms)</text>
+        <rect x="740" y="10" width="70" height="20" rx="10" fill="#ecfdf5"/>
+        <text x="775" y="24" font-size="10" font-weight="700" fill="#047857" text-anchor="middle">Pronto</text>
+        <line x1="20" y1="35" x2="830" y2="35" stroke="#e2e8f0" stroke-width="0.75"/>
+      </g>
+
+      <!-- Row 2 -->
+      <g transform="translate(0, 71)">
+        <text x="20" y="24" font-size="11" font-family="ui-monospace, Menlo, monospace" fill="#64748b">10:00:58</text>
+        <text x="140" y="24" font-size="12" font-weight="600" fill="#0f172a">Porta Ocupada</text>
+        <text x="320" y="24" font-size="11" fill="#0f172a">Porta 8080 associada com sucesso ao PID 48210</text>
+        <rect x="740" y="10" width="70" height="20" rx="10" fill="#ecfdf5"/>
+        <text x="775" y="24" font-size="10" font-weight="700" fill="#047857" text-anchor="middle">Sucesso</text>
+        <line x1="20" y1="35" x2="830" y2="35" stroke="#e2e8f0" stroke-width="0.75"/>
+      </g>
+
+      <!-- Row 3 -->
+      <g transform="translate(0, 107)">
+        <text x="20" y="24" font-size="11" font-family="ui-monospace, Menlo, monospace" fill="#64748b">10:00:52</text>
+        <text x="140" y="24" font-size="12" font-weight="600" fill="#0f172a">Disparo launchctl</text>
+        <text x="320" y="24" font-size="11" fill="#0f172a">Invocado `launchctl kickstart -k gui/501/local.mflux-studio`</text>
+        <rect x="740" y="10" width="70" height="20" rx="10" fill="#fef3c7"/>
+        <text x="775" y="24" font-size="10" font-weight="700" fill="#b45309" text-anchor="middle">Iniciando</text>
+        <line x1="20" y1="35" x2="830" y2="35" stroke="#e2e8f0" stroke-width="0.75"/>
+      </g>
+
+      <!-- Row 4 -->
+      <g transform="translate(0, 143)">
+        <text x="20" y="24" font-size="11" font-family="ui-monospace, Menlo, monospace" fill="#64748b">09:58:30</text>
+        <text x="140" y="24" font-size="12" font-weight="600" fill="#0f172a">Comando Recebido</text>
+        <text x="320" y="24" font-size="11" fill="#0f172a">Operador solicitou início do serviço através da interface</text>
+        <rect x="740" y="10" width="70" height="20" rx="10" fill="#f1f5f9"/>
+        <text x="775" y="24" font-size="10" font-weight="700" fill="#64748b" text-anchor="middle">Recebido</text>
+        <line x1="20" y1="35" x2="830" y2="35" stroke="#e2e8f0" stroke-width="0.75"/>
+      </g>
+
+      <!-- Row 5 -->
+      <g transform="translate(0, 179)">
+        <text x="20" y="24" font-size="11" font-family="ui-monospace, Menlo, monospace" fill="#64748b">09:45:00</text>
+        <text x="140" y="24" font-size="12" font-weight="600" fill="#0f172a">Serviço Registrado</text>
+        <text x="320" y="24" font-size="11" fill="#0f172a">Configuração importada de `local.mflux-studio.plist`</text>
+        <rect x="740" y="10" width="70" height="20" rx="10" fill="#ecfdf5"/>
+        <text x="775" y="24" font-size="10" font-weight="700" fill="#047857" text-anchor="middle">Cadastrado</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- Recovery Action Footer -->
+  <g transform="translate(50, 560)">
+    <rect width="180" height="32" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+    <g transform="translate(12, 8)" fill="none" stroke="#0f172a" stroke-width="1.75">
+      <path d="M12 2a10 10 0 1 1-7.07 2.93"/>
+      <polyline points="5 2 5 7 10 7"/>
+    </g>
+    <text x="34" y="21" font-size="12" font-weight="600" fill="#0f172a">Reverificar Prontidão</text>
+    <text x="240" y="21" font-size="11" font-weight="400" fill="#64748b">Última checagem completa concluída com sucesso sem erros de supervisor.</text>
+  </g>
+</svg>

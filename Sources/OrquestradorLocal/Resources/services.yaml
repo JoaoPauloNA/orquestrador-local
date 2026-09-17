@@ -1,0 +1,79 @@
+# Declarative, local-only service catalog. Existing LaunchAgents are read and
+# validated; this file never writes or replaces a plist.
+screenpipe:
+  name: ScreenPipe
+  label: com.joaopaulo.screenpipe
+  plist_path: /Users/joaopaulo/Library/LaunchAgents/com.joaopaulo.screenpipe.plist
+  executable_path: /Users/joaopaulo/.local/bin/screenpipe-orquestrador
+  working_directory: /Users/joaopaulo/.screenpipe
+  readiness_url: http://127.0.0.1:3030/health
+  readiness_identity_kind: jsonTopLevelKey
+  readiness_identity: version
+  activity_url:
+  open_url: http://127.0.0.1:3030/health
+  description: Captura local de tela e OCR com bridge determinística para AnythingLLM
+
+anythingllm:
+  name: AnythingLLM
+  label: com.joaopaulo.anythingllm
+  plist_path: /Users/joaopaulo/Library/LaunchAgents/com.joaopaulo.anythingllm.plist
+  executable_path: /Users/joaopaulo/.local/bin/anythingllm-orquestrador
+  working_directory: /Users/joaopaulo/Library/Application Support/anythingllm-desktop
+  readiness_url: http://127.0.0.1:3001/api/ping
+  readiness_identity_kind: jsonTopLevelKey
+  readiness_identity: online
+  activity_url:
+  open_url: http://127.0.0.1:3001/
+  description: Memória vetorial e RAG local controlado pelo LaunchAgent existente
+
+comfyui:
+  name: ComfyUI
+  label: local.comfyui
+  plist_path: /Users/joaopaulo/Library/LaunchAgents/local.comfyui.plist
+  executable_path: /Users/joaopaulo/ComfyUI/.venv/bin/python
+  working_directory: /Users/joaopaulo/ComfyUI
+  readiness_url: http://127.0.0.1:8188/system_stats
+  readiness_identity_kind: jsonTopLevelKey
+  readiness_identity: system
+  activity_url: http://127.0.0.1:8188/queue
+  open_url: http://127.0.0.1:8188/
+  description: ComfyUI local controlado pelo LaunchAgent existente
+
+mflux:
+  name: mflux-studio
+  label: com.joaopaulo.mflux-studio
+  plist_path: /Users/joaopaulo/Library/LaunchAgents/com.joaopaulo.mflux-studio.plist
+  executable_path: /Users/joaopaulo/Documents/Projetos/Carreira/mflux-studio/.venv/bin/python3
+  working_directory: /Users/joaopaulo/Documents/Projetos/Carreira/mflux-studio
+  readiness_url: http://127.0.0.1:8765/
+  readiness_identity_kind: bodyContains
+  readiness_identity: <html
+  activity_url:
+  open_url: http://127.0.0.1:8765/
+  description: mflux-studio local controlado pelo LaunchAgent existente
+
+sm_graficos:
+  name: Segunda Mente
+  label: com.joaopaulo.segunda-mente
+  plist_path: /Users/joaopaulo/Library/LaunchAgents/com.joaopaulo.segunda-mente.plist
+  executable_path: /Users/joaopaulo/.local/bin/npm
+  working_directory: /Users/joaopaulo/Documents/Projetos/Pessoal/Projetos-SM/Home
+  readiness_url: http://127.0.0.1:3010/api/health
+  readiness_identity_kind: bodyContains
+  readiness_identity: "service":"segunda-mente
+  activity_url:
+  open_url: http://127.0.0.1:3010/
+  description: Dashboard da Segunda Mente em build de produção
+
+grafico:
+  name: SM_graficos (Grafico)
+  label: com.joaopaulo.sm-graficos
+  plist_path: /Users/joaopaulo/Library/LaunchAgents/com.joaopaulo.sm-graficos.plist
+  executable_path: /Users/joaopaulo/.local/bin/npm
+  working_directory: /Users/joaopaulo/Documents/Projetos/Pessoal/Projetos-SM/Grafico
+  readiness_url: http://127.0.0.1:3011/
+  readiness_identity_kind: bodyContains
+  readiness_identity: <div id=
+  activity_url:
+  open_url: http://127.0.0.1:3011/
+  description: Painel de gráficos da Segunda Mente em build de produção

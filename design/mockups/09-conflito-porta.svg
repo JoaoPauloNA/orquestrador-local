@@ -1,0 +1,146 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 640" width="960" height="640" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', sans-serif">
+  <defs>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#0f172a" flood-opacity="0.12"/>
+    </filter>
+    <filter id="cardShadow" x="-2%" y="-2%" width="104%" height="108%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#0f172a" flood-opacity="0.04"/>
+    </filter>
+  </defs>
+
+  <!-- Window Frame -->
+  <rect x="20" y="20" width="920" height="600" rx="16" fill="#ffffff" filter="url(#shadow)" stroke="#cbd5e1" stroke-width="1"/>
+
+  <!-- Left Sidebar (240px) -->
+  <rect x="20" y="20" width="240" height="600" rx="16" fill="#f8fafc"/>
+  <rect x="240" y="20" width="20" height="600" fill="#f8fafc"/>
+  <line x1="260" y1="20" x2="260" y2="620" stroke="#e2e8f0" stroke-width="1"/>
+
+  <!-- Controls & Brand in Sidebar -->
+  <circle cx="44" cy="44" r="6" fill="#ff5f56" stroke="#e0443e" stroke-width="0.5"/>
+  <circle cx="64" cy="44" r="6" fill="#ffbd2e" stroke="#dea123" stroke-width="0.5"/>
+  <circle cx="84" cy="44" r="6" fill="#27c93f" stroke="#1aab29" stroke-width="0.5"/>
+
+  <g transform="translate(40, 80)">
+    <circle cx="12" cy="12" r="12" fill="#0f172a"/>
+    <circle cx="12" cy="12" r="4" fill="#059669"/>
+    <text x="32" y="16" font-size="14" font-weight="700" fill="#0f172a">Orquestrador</text>
+    <text x="124" y="16" font-size="11" font-weight="700" fill="#059669">LOCAL</text>
+  </g>
+
+  <!-- Nav Items in Sidebar -->
+  <g transform="translate(32, 130)">
+    <!-- Catálogo -->
+    <rect x="0" y="0" width="216" height="36" rx="8" fill="#e2e8f0" opacity="0.7"/>
+    <text x="36" y="23" font-size="13" font-weight="600" fill="#0f172a">Catálogo de Serviços</text>
+    <rect x="186" y="9" width="20" height="18" rx="9" fill="#0f172a"/>
+    <text x="196" y="22" font-size="11" font-weight="700" fill="#ffffff" text-anchor="middle">2</text>
+
+    <!-- Alertas (Active indicator) -->
+    <g transform="translate(0, 44)">
+      <rect x="0" y="0" width="216" height="36" rx="8" fill="#fef2f2" stroke="#fecaca" stroke-width="1"/>
+      <g transform="translate(12, 10)" fill="none" stroke="#dc2626" stroke-width="1.75">
+        <path d="M8 2a6 6 0 0 0-6 6v3l-2 2h16l-2-2V8a6 6 0 0 0-6-6z"/>
+      </g>
+      <text x="36" y="23" font-size="13" font-weight="700" fill="#dc2626">Conflito de Porta</text>
+      <rect x="186" y="9" width="20" height="18" rx="9" fill="#dc2626"/>
+      <text x="196" y="22" font-size="11" font-weight="700" fill="#ffffff" text-anchor="middle">1</text>
+    </g>
+  </g>
+
+  <!-- Main Area -->
+  <g transform="translate(290, 44)">
+    <text x="0" y="0" font-size="20" font-weight="700" fill="#0f172a">Catálogo de Serviços</text>
+    <text x="0" y="22" font-size="12" font-weight="400" fill="#64748b">Inicialização retida por verificação preventiva de integridade de rede</text>
+
+    <!-- Synthetic Watermark Top Right -->
+    <g transform="translate(430, -15)">
+      <rect width="200" height="22" rx="4" fill="#f1f5f9"/>
+      <text x="100" y="15" font-size="9" font-weight="800" fill="#64748b" text-anchor="middle" letter-spacing="0.06em">CONCEITO / DADOS SINTÉTICOS</text>
+    </g>
+  </g>
+
+  <!-- Informational Conflict Banner (Prominent, Non-Destructive) -->
+  <g transform="translate(290, 100)" filter="url(#cardShadow)">
+    <rect width="630" height="120" rx="12" fill="#fef2f2" stroke="#fca5a5" stroke-width="1.5"/>
+    
+    <!-- Red Accent Left Bar -->
+    <path d="M 0 12 Q 0 0 12 0 L 12 120 Q 0 120 0 108 Z" fill="#dc2626"/>
+
+    <!-- Warning Icon -->
+    <g transform="translate(24, 20)" fill="none" stroke="#dc2626" stroke-width="2">
+      <circle cx="12" cy="12" r="11" fill="#fee2e2"/>
+      <line x1="12" y1="7" x2="12" y2="13"/>
+      <circle cx="12" cy="17" r="1" fill="#dc2626"/>
+    </g>
+
+    <text x="56" y="32" font-size="15" font-weight="700" fill="#991b1b">Não foi possível iniciar 'mflux-studio': Porta 8080 em conflito</text>
+    <text x="56" y="52" font-size="12" font-weight="400" fill="#7f1d1d">A porta TCP 8080 necessária para este serviço já está ocupada por outro processo em execução.</text>
+
+    <!-- Technical Diagnostic Data -->
+    <g transform="translate(56, 68)">
+      <rect width="550" height="34" rx="6" fill="#ffffff" stroke="#fecaca" stroke-width="1"/>
+      <text x="12" y="22" font-size="11" font-weight="700" fill="#0f172a">Processo Ocupante:</text>
+      <text x="130" y="22" font-size="11" font-family="ui-monospace, Menlo, monospace" fill="#991b1b">python3 (PID 49102 · Usuário: joaopaulo · Bind em 127.0.0.1:8080)</text>
+    </g>
+  </g>
+
+  <!-- Explanation & Safe Guidance Box (NO KILL BUTTON) -->
+  <g transform="translate(290, 240)">
+    <rect width="630" height="130" rx="10" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+    
+    <text x="24" y="28" font-size="13" font-weight="700" fill="#0f172a">Como resolver este conflito com segurança:</text>
+    
+    <text x="24" y="52" font-size="12" font-weight="400" fill="#64748b">1. <tspan font-weight="600" fill="#0f172a">Encerramento manual</tspan>: Verifique no terminal ou no Activity Monitor se o PID 49102 pode ser finalizado pelo operador.</text>
+    <text x="24" y="72" font-size="12" font-weight="400" fill="#64748b">2. <tspan font-weight="600" fill="#0f172a">Troca de porta</tspan>: Ajuste a porta padrão nas configurações deste projeto para uma porta livre (ex: 8081).</text>
+    
+    <g transform="translate(24, 88)">
+      <rect width="582" height="28" rx="6" fill="#f1f5f9"/>
+      <text x="12" y="18" font-size="10" font-weight="700" fill="#64748b">POLÍTICA DE PROTEÇÃO DO ORQUESTRADOR:</text>
+      <text x="254" y="18" font-size="10" font-weight="400" fill="#64748b">O aplicativo nunca mata processos alheios automaticamente.</text>
+    </g>
+  </g>
+
+  <!-- Project Card in Blocked State -->
+  <g transform="translate(290, 390)" opacity="0.85">
+    <rect width="630" height="130" rx="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+    
+    <text x="24" y="32" font-size="16" font-weight="700" fill="#0f172a">mflux-studio</text>
+    <text x="24" y="52" font-size="12" font-weight="400" fill="#64748b" font-family="ui-monospace, Menlo, monospace">http://127.0.0.1:8080 · Retido por conflito de porta</text>
+
+    <!-- State Badge (Erro de Porta) -->
+    <g transform="translate(480, 18)">
+      <rect width="130" height="28" rx="14" fill="#fef2f2" stroke="#fecaca" stroke-width="1"/>
+      <text x="65" y="18" font-size="11" font-weight="700" fill="#dc2626" text-anchor="middle">Porta em Conflito</text>
+    </g>
+
+    <!-- Action Buttons with Iniciar disabled -->
+    <g transform="translate(24, 85)">
+      <!-- Iniciar (Disabled) -->
+      <g opacity="0.4">
+        <rect width="82" height="26" rx="6" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+        <text x="41" y="17" font-size="11" font-weight="600" fill="#64748b" text-anchor="middle">Iniciar</text>
+      </g>
+
+      <!-- Reverificar Porta (Safe Action) -->
+      <g transform="translate(90, 0)">
+        <rect width="130" height="26" rx="6" fill="#ffffff" stroke="#0f172a" stroke-width="1"/>
+        <text x="65" y="17" font-size="11" font-weight="600" fill="#0f172a" text-anchor="middle">Reverificar Porta</text>
+      </g>
+
+      <!-- Configurações do Projeto -->
+      <g transform="translate(230, 0)">
+        <rect width="130" height="26" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1"/>
+        <text x="65" y="17" font-size="11" font-weight="600" fill="#64748b" text-anchor="middle">Alterar Porta...</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- Persistent Synthetic Watermark Footer -->
+  <g transform="translate(290, 585)">
+    <rect width="630" height="24" rx="6" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+    <circle cx="14" cy="12" r="3" fill="#d97706"/>
+    <text x="26" y="16" font-size="10" font-weight="800" fill="#64748b" letter-spacing="0.08em">CONCEITO / DADOS SINTÉTICOS</text>
+    <text x="618" y="16" font-size="10" font-weight="500" fill="#94a3b8" text-anchor="end">Tratamento Informativo de Conflito de Rede</text>
+  </g>
+</svg>

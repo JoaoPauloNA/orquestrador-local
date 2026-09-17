@@ -1,0 +1,34 @@
+# Xcode / Swift Package Manager
+.build/
+Packages/
+Package.pins
+Package.resolved
+*.xcodeproj
+*.xcworkspace
+*.xcuserdatad
+xcuserdata/
+DerivedData/
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.Spotlight-V100
+.Trashes
+
+# Artifacts de build e empacotamento
+dist/
+*.app
+*.dSYM/
+*.ipa
+*.pkg
+
+# Workspaces temporários e logs de execução de runners
+work/
+execucoes/
+*.log
+
+# Arquivos temporários de screenshots de teste
+1479

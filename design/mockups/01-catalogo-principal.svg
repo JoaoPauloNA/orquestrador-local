@@ -1,0 +1,275 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 640" width="960" height="640" font-family="-apple-system, BlinkMacSystemFont, 'SF Pro Text', 'SF Pro Display', sans-serif">
+  <defs>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="115%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#0f172a" flood-opacity="0.12"/>
+      <feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="#0f172a" flood-opacity="0.08"/>
+    </filter>
+    <filter id="cardShadow" x="-2%" y="-2%" width="104%" height="108%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#0f172a" flood-opacity="0.04"/>
+    </filter>
+  </defs>
+
+  <!-- Window Frame / Shadow -->
+  <rect x="20" y="20" width="920" height="600" rx="16" ry="16" fill="#ffffff" filter="url(#shadow)" stroke="#cbd5e1" stroke-width="1"/>
+
+  <!-- Left Sidebar (Width: 240) -->
+  <rect x="20" y="20" width="240" height="600" rx="16" ry="16" fill="#f8fafc"/>
+  <!-- Clip right corners of sidebar -->
+  <rect x="240" y="20" width="20" height="600" fill="#f8fafc"/>
+  <line x1="260" y1="20" x2="260" y2="620" stroke="#e2e8f0" stroke-width="1"/>
+
+  <!-- Window Controls (macOS Traffic Lights) -->
+  <circle cx="44" cy="44" r="6" fill="#ff5f56" stroke="#e0443e" stroke-width="0.5"/>
+  <circle cx="64" cy="44" r="6" fill="#ffbd2e" stroke="#dea123" stroke-width="0.5"/>
+  <circle cx="84" cy="44" r="6" fill="#27c93f" stroke="#1aab29" stroke-width="0.5"/>
+
+  <!-- App Title & Mini Brand -->
+  <g transform="translate(40, 80)">
+    <!-- Small Brand Node -->
+    <circle cx="12" cy="12" r="12" fill="#0f172a"/>
+    <circle cx="12" cy="12" r="4" fill="#059669"/>
+    <text x="32" y="16" font-size="14" font-weight="700" fill="#0f172a" letter-spacing="-0.01em">Orquestrador</text>
+    <text x="124" y="16" font-size="11" font-weight="700" fill="#059669" letter-spacing="0.05em">LOCAL</text>
+  </g>
+
+  <!-- Sidebar Navigation Items -->
+  <g transform="translate(32, 130)">
+    <!-- Item 1: Catálogo (Active) -->
+    <rect x="0" y="0" width="216" height="36" rx="8" fill="#e2e8f0" opacity="0.7"/>
+    <g transform="translate(12, 10)" fill="none" stroke="#0f172a" stroke-width="1.75">
+      <rect x="2" y="2" width="5" height="5" rx="1"/>
+      <rect x="9" y="2" width="5" height="5" rx="1"/>
+      <rect x="2" y="9" width="5" height="5" rx="1"/>
+      <rect x="9" y="9" width="5" height="5" rx="1"/>
+    </g>
+    <text x="36" y="23" font-size="13" font-weight="600" fill="#0f172a">Catálogo de Serviços</text>
+    <!-- Badge Count -->
+    <rect x="186" y="9" width="20" height="18" rx="9" fill="#0f172a"/>
+    <text x="196" y="22" font-size="11" font-weight="700" fill="#ffffff" text-anchor="middle">2</text>
+
+    <!-- Item 2: Alertas -->
+    <g transform="translate(0, 44)">
+      <g transform="translate(12, 10)" fill="none" stroke="#64748b" stroke-width="1.75">
+        <path d="M8 2a6 6 0 0 0-6 6v3l-2 2h16l-2-2V8a6 6 0 0 0-6-6z"/>
+      </g>
+      <text x="36" y="23" font-size="13" font-weight="500" fill="#64748b">Alertas Ativos</text>
+      <rect x="186" y="9" width="20" height="18" rx="9" fill="#e2e8f0"/>
+      <text x="196" y="22" font-size="11" font-weight="600" fill="#64748b" text-anchor="middle">0</text>
+    </g>
+
+    <!-- Item 3: Configurações -->
+    <g transform="translate(0, 88)">
+      <g transform="translate(12, 10)" fill="none" stroke="#64748b" stroke-width="1.75">
+        <circle cx="8" cy="8" r="3"/>
+        <path d="M14 8a6 6 0 1 1-12 0 6 6 0 0 1 12 0z" stroke-dasharray="2 2"/>
+      </g>
+      <text x="36" y="23" font-size="13" font-weight="500" fill="#64748b">Configurações</text>
+    </g>
+  </g>
+
+  <!-- Sidebar Status Box (Bottom) -->
+  <g transform="translate(32, 530)">
+    <rect width="216" height="60" rx="10" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+    <circle cx="20" cy="22" r="5" fill="#059669"/>
+    <text x="32" y="26" font-size="11" font-weight="700" fill="#0f172a">Supervisor Local</text>
+    <text x="20" y="44" font-size="10" font-weight="400" fill="#64748b">LaunchAgents ativo e responsivo</text>
+  </g>
+
+  <!-- Main Content Area (From x=260 to 940) -->
+  <!-- Header Bar -->
+  <g transform="translate(290, 44)">
+    <text x="0" y="0" font-size="20" font-weight="700" fill="#0f172a" letter-spacing="-0.015em">Catálogo de Serviços</text>
+    <text x="0" y="22" font-size="12" font-weight="400" fill="#64748b">Serviços registrados sob controle determinístico do operador</text>
+
+    <!-- Action: Novo Cadastro -->
+    <g transform="translate(500, -16)">
+      <rect width="130" height="32" rx="8" fill="#0f172a"/>
+      <g transform="translate(12, 9)" fill="none" stroke="#ffffff" stroke-width="2">
+        <line x1="7" y1="2" x2="7" y2="12"/>
+        <line x1="2" y1="7" x2="12" y2="7"/>
+      </g>
+      <text x="32" y="21" font-size="12" font-weight="600" fill="#ffffff">Novo Serviço</text>
+    </g>
+  </g>
+
+  <!-- Filter Pills -->
+  <g transform="translate(290, 100)">
+    <rect x="0" y="0" width="80" height="26" rx="13" fill="#0f172a"/>
+    <text x="40" y="17" font-size="11" font-weight="600" fill="#ffffff" text-anchor="middle">Todos (2)</text>
+
+    <rect x="88" y="0" width="116" height="26" rx="13" fill="#f1f5f9" stroke="#e2e8f0" stroke-width="1"/>
+    <text x="146" y="17" font-size="11" font-weight="500" fill="#64748b" text-anchor="middle">Em Execução (1)</text>
+
+    <rect x="212" y="0" width="94" height="26" rx="13" fill="#f1f5f9" stroke="#e2e8f0" stroke-width="1"/>
+    <text x="259" y="17" font-size="11" font-weight="500" fill="#64748b" text-anchor="middle">Parados (1)</text>
+  </g>
+
+  <!-- Service Card 1: mflux-studio (State: Pronto) -->
+  <g transform="translate(290, 145)" filter="url(#cardShadow)">
+    <rect width="630" height="150" rx="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+    
+    <!-- Left Accent Border -->
+    <path d="M 0 12 Q 0 0 12 0 L 12 150 Q 0 150 0 138 Z" fill="#059669"/>
+
+    <!-- Service Identity -->
+    <text x="24" y="32" font-size="16" font-weight="700" fill="#0f172a">mflux-studio</text>
+    <text x="24" y="52" font-size="12" font-weight="400" fill="#64748b" font-family="ui-monospace, Menlo, monospace">http://127.0.0.1:8080 · local.mflux-studio.plist</text>
+
+    <!-- State Badge: Pronto -->
+    <g transform="translate(500, 18)">
+      <rect width="110" height="28" rx="14" fill="#ecfdf5" stroke="#a7f3d0" stroke-width="1"/>
+      <g transform="translate(10, 6)" fill="none" stroke="#059669" stroke-width="2">
+        <circle cx="8" cy="8" r="7"/>
+        <polyline points="5 8 7.5 10.5 11 6"/>
+      </g>
+      <text x="34" y="18" font-size="11" font-weight="700" fill="#047857">Pronto</text>
+    </g>
+
+    <!-- Metadata Row (Memory & Last Checked) -->
+    <g transform="translate(24, 75)">
+      <!-- Memory info -->
+      <g fill="none" stroke="#64748b" stroke-width="1.5">
+        <rect x="0" y="2" width="14" height="14" rx="2"/>
+        <line x1="3" y1="6" x2="11" y2="6"/>
+      </g>
+      <text x="20" y="14" font-size="12" font-weight="500" fill="#0f172a">2.4 GB</text>
+      <text x="64" y="14" font-size="11" font-weight="400" fill="#64748b">(consumo estimado · PID 48210)</text>
+
+      <!-- Timestamp info -->
+      <g transform="translate(280, 0)" fill="none" stroke="#64748b" stroke-width="1.5">
+        <circle cx="8" cy="8" r="7"/>
+        <polyline points="8 4 8 8 11 10"/>
+      </g>
+      <text x="304" y="14" font-size="11" font-weight="400" fill="#64748b">Checado há 12s via HTTP 200 OK</text>
+    </g>
+
+    <!-- Divider -->
+    <line x1="24" y1="105" x2="610" y2="105" stroke="#f1f5f9" stroke-width="1"/>
+
+    <!-- Action Buttons Row (4 Canonical Verbs) -->
+    <g transform="translate(24, 115)">
+      <!-- Iniciar (Disabled because already running) -->
+      <g opacity="0.4">
+        <rect width="82" height="26" rx="6" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+        <polygon points="12,7 20,13 12,19" fill="#64748b"/>
+        <text x="26" y="17" font-size="11" font-weight="600" fill="#64748b">Iniciar</text>
+      </g>
+
+      <!-- Parar (Enabled) -->
+      <g transform="translate(90, 0)">
+        <rect width="82" height="26" rx="6" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+        <rect x="10" y="8" width="10" height="10" rx="1" fill="#dc2626"/>
+        <text x="26" y="17" font-size="11" font-weight="600" fill="#0f172a">Parar</text>
+      </g>
+
+      <!-- Abrir (Enabled) -->
+      <g transform="translate(180, 0)">
+        <rect width="82" height="26" rx="6" fill="#ffffff" stroke="#cbd5e1" stroke-width="1"/>
+        <g transform="translate(10, 6)" fill="none" stroke="#0284c7" stroke-width="1.75">
+          <path d="M10 7v4a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h4"/>
+          <polyline points="8 2 12 2 12 6"/>
+          <line x1="5" y1="9" x2="12" y2="2"/>
+        </g>
+        <text x="28" y="17" font-size="11" font-weight="600" fill="#0f172a">Abrir</text>
+      </g>
+
+      <!-- Detalhes (Enabled) -->
+      <g transform="translate(510, 0)">
+        <rect width="96" height="26" rx="6" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+        <g transform="translate(8, 6)" fill="none" stroke="#64748b" stroke-width="1.75">
+          <circle cx="7" cy="7" r="6"/>
+          <line x1="7" y1="6" x2="7" y2="10"/>
+          <line x1="7" y1="4" x2="7.01" y2="4"/>
+        </g>
+        <text x="26" y="17" font-size="11" font-weight="600" fill="#64748b">Detalhes</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- Service Card 2: ComfyUI (State: Parado) -->
+  <g transform="translate(290, 315)" filter="url(#cardShadow)">
+    <rect width="630" height="150" rx="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="1"/>
+    
+    <!-- Left Accent Border -->
+    <path d="M 0 12 Q 0 0 12 0 L 12 150 Q 0 150 0 138 Z" fill="#94a3b8"/>
+
+    <!-- Service Identity -->
+    <text x="24" y="32" font-size="16" font-weight="700" fill="#0f172a">ComfyUI</text>
+    <text x="24" y="52" font-size="12" font-weight="400" fill="#64748b" font-family="ui-monospace, Menlo, monospace">http://127.0.0.1:8188 · com.joaopaulo.comfyui.plist</text>
+
+    <!-- State Badge: Parado -->
+    <g transform="translate(500, 18)">
+      <rect width="110" height="28" rx="14" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+      <circle cx="18" cy="14" r="5" fill="#64748b"/>
+      <text x="34" y="18" font-size="11" font-weight="700" fill="#475569">Parado</text>
+    </g>
+
+    <!-- Metadata Row (Memory & Last Checked) -->
+    <g transform="translate(24, 75)">
+      <!-- Memory info -->
+      <g fill="none" stroke="#64748b" stroke-width="1.5">
+        <rect x="0" y="2" width="14" height="14" rx="2"/>
+        <line x1="3" y1="6" x2="11" y2="6"/>
+      </g>
+      <text x="20" y="14" font-size="12" font-weight="500" fill="#64748b">0 MB</text>
+      <text x="56" y="14" font-size="11" font-weight="400" fill="#94a3b8">(processo inativo)</text>
+
+      <!-- Timestamp info -->
+      <g transform="translate(280, 0)" fill="none" stroke="#64748b" stroke-width="1.5">
+        <circle cx="8" cy="8" r="7"/>
+        <polyline points="8 4 8 8 11 10"/>
+      </g>
+      <text x="304" y="14" font-size="11" font-weight="400" fill="#64748b">Porta 8188 desocupada e pronta para bind</text>
+    </g>
+
+    <!-- Divider -->
+    <line x1="24" y1="105" x2="610" y2="105" stroke="#f1f5f9" stroke-width="1"/>
+
+    <!-- Action Buttons Row -->
+    <g transform="translate(24, 115)">
+      <!-- Iniciar (Enabled - Prominent Primary Action) -->
+      <g>
+        <rect width="82" height="26" rx="6" fill="#0f172a"/>
+        <polygon points="12,7 20,13 12,19" fill="#ffffff"/>
+        <text x="26" y="17" font-size="11" font-weight="600" fill="#ffffff">Iniciar</text>
+      </g>
+
+      <!-- Parar (Disabled) -->
+      <g transform="translate(90, 0)" opacity="0.4">
+        <rect width="82" height="26" rx="6" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+        <rect x="10" y="8" width="10" height="10" rx="1" fill="#94a3b8"/>
+        <text x="26" y="17" font-size="11" font-weight="600" fill="#94a3b8">Parar</text>
+      </g>
+
+      <!-- Abrir (Disabled) -->
+      <g transform="translate(180, 0)" opacity="0.4">
+        <rect width="82" height="26" rx="6" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+        <g transform="translate(10, 6)" fill="none" stroke="#94a3b8" stroke-width="1.75">
+          <path d="M10 7v4a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1h4"/>
+          <polyline points="8 2 12 2 12 6"/>
+          <line x1="5" y1="9" x2="12" y2="2"/>
+        </g>
+        <text x="28" y="17" font-size="11" font-weight="600" fill="#94a3b8">Abrir</text>
+      </g>
+
+      <!-- Detalhes (Enabled) -->
+      <g transform="translate(510, 0)">
+        <rect width="96" height="26" rx="6" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+        <g transform="translate(8, 6)" fill="none" stroke="#64748b" stroke-width="1.75">
+          <circle cx="7" cy="7" r="6"/>
+          <line x1="7" y1="6" x2="7" y2="10"/>
+          <line x1="7" y1="4" x2="7.01" y2="4"/>
+        </g>
+        <text x="26" y="17" font-size="11" font-weight="600" fill="#64748b">Detalhes</text>
+      </g>
+    </g>
+  </g>
+
+  <!-- Persistent Synthetic Watermark Footer -->
+  <g transform="translate(290, 585)">
+    <rect width="630" height="24" rx="6" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1"/>
+    <circle cx="14" cy="12" r="3" fill="#d97706"/>
+    <text x="26" y="16" font-size="10" font-weight="800" fill="#64748b" letter-spacing="0.08em">CONCEITO / DADOS SINTÉTICOS</text>
+    <text x="618" y="16" font-size="10" font-weight="500" fill="#94a3b8" text-anchor="end">Ambiente de Demonstração e Validação Visual</text>
+  </g>
+</svg>
